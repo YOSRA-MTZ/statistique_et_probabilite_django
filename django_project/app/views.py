@@ -8,10 +8,10 @@ def excel(request):
         return render(request, 'excel.html')
 
 def text(request):
-        return render(request, 'excel.html')
+        return render(request, 'text.html')
 
 def csv(request):
-        return render(request, 'excel.html')
+        return render(request, 'csv.html')
 
 def url(request):
-        return render(request, 'excel.html')
+        return render(request, 'url.html')

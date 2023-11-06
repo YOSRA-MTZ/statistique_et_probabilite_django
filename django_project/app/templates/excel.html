@@ -1,37 +1,213 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="fr">
-<head>
+    <head>
+        {% block styles %}
+        <link rel="stylesheet" type="text/css"
+            href="{% static 'css/style.css' %}">
+
+        {% endblock %}
         <meta charset="UTF-8">
-    <title>Fusionnez des fichiers excel</title>
-    
+        <title>
+            ESSADEQ MOUMTAZ
+        </title>
+        <meta name="description"
+            content="iLovePDF est un service en ligne pour traiter les fichiers PDF, entièrement gratuit et simple d'utilisation. Fusionnez des PDF, divisez des PDF, compressez des PDF, Office en PDF, PDF en JPG et bien plus encore !" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta name="author" content="ilovepdf.com" />
+        <meta name="keywords"
+            content="Fusion PDF, division PDF, combinaison PDF, extraction PDF, compression PDF, conversion PDF, Word en PDF, Excel en PDF, PowerPoint en PDF, PDF en JPG, JPG en PDF" />
+        <link rel="canonical" href="https://www.ilovepdf.com/fr" />
+        <meta name="apple-itunes-app" content="app-id=1207332399">
+        <meta name="google-play-app" content="app-id=com.ilovepdf.www">
+        <link rel="apple-touch-icon" href="/img/app-icon.png">
+        <meta name="google-site-verification"
+            content="IZueAX8T8h1eMQN3D0y8Xx7qu8-yCvtHnwn3MmpdSLo" />
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="/img/favicons-pdf/favicon-32x32.png">
+        <meta property="og:site_name"
+            content="iLovePDF - Outils en ligne pour PDF" />
+        <meta property="og:title"
+            content="iLovePDF | Outils PDF en ligne pour les amateurs de PDF" />
+        <meta property="og:description"
+            content="iLovePDF est un service en ligne pour traiter les fichiers PDF, entièrement gratuit et simple d'utilisation. Fusionnez des PDF, divisez des PDF, compressez des PDF, Office en PDF, PDF en JPG et bien plus encore !" />
+        <meta property="og:image"
+            content="https://www.ilovepdf.com/img/ilovepdf/social/fr/ilovepdf.png" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.ilovepdf.com/fr" />
+        <meta property="og:app_id" content="127502793959418" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@ilovepdf_com">
+        <meta name="twitter:creator" content="@ilovepdf_com">
+        <meta name="twitter:title"
+            content="iLovePDF | Outils PDF en ligne pour les amateurs de PDF">
+        <meta name="twitter:description"
+            content="iLovePDF est un service en ligne pour traiter les fichiers PDF, entièrement gratuit et simple d'utilisation. Fusionnez des PDF, divisez des PDF, compressez des PDF, Office en PDF, PDF en JPG et bien plus encore !">
+        <meta name="twitter:image:src"
+            content="https://www.ilovepdf.com/img/ilovepdf/social/fr/ilovepdf.png" />
+        <link rel="preload" href="/font/Graphik-Bold.woff2" as="font"
+            type="font/woff2" crossorigin="anonymous">
+        <link rel="preload" href="/font/Graphik-Semibold.woff2" as="font"
+            type="font/woff2" crossorigin="anonymous">
+        <link rel="preload" href="/font/Graphik-Medium.woff2" as="font"
+            type="font/woff2" crossorigin="anonymous">
+        <link rel="preload" href="/font/Graphik-Regular.woff2" as="font"
+            type="font/woff2" crossorigin="anonymous">
+        <meta name="csrf-param" content="_csrf-ilovepdf">
+        <meta name="csrf-token"
+            content="EjFxRd7uRflBdr47V2SVU1huxSyxZe_oUb_eUQQnR2VxCBMDiZhougMd71BiBqQ4aDqPQd8mvaop2pdmd0MELw==">
+        <script>var ilx = {'c': 'site', 'a': 'index'};</script>
+        <script>
+            var nc=0;
+        var ibc = nc;
+    (function (i,l,o,v,e,g,u,a) {
+        i['ib']=i['ib']||{'set':function(){(i['ib'].q=i['ib'].q||[]).push(arguments)}};
+        i['iLE']=e;i[e]=i[e]||function(){(i[e].q=i[e].q||[]).push(arguments)};i[e].l=1*new Date();u=l.createElement(o);
+        a=l.getElementsByTagName(o)[0];u.async=1;u.src=v;a.parentNode.insertBefore(u,a);i[e+'u']=g;    })(window, document, 'script', '/js/ilove.min.js?a=1.3', 'ev');
 
-<link rel="stylesheet" type="text/css"href="{% static 'css/style.css' %}">
-</head>
-<body class="lang-fr toolpage  ">
-<header class="header">
-    <nav>
-        
-<a class="brand" href="/fr" title="iLovePDF">
-    <img src="../static/img/IY.png" alt="I.Y" width="20px"
-                        height="20px" />
-</a>          
-           
-    </nav>
-</header>
+            ev('sendOnce', 'pageview');
+    </script>
+        <script async
+            src="https://www.googletagmanager.com/gtag/js?id=G-44KQ8HETWT"></script>
+        <script>
+    var gck=undefined,gnock=false;
+    var gcas=gcaa=(gnock?'denied':'granted');gnock&&(gcas=(3==gck||1==gck||4==gck?'granted':'denied'))&&(gcaa=(1==gck||2==gck||4==gck?'granted':'denied'));
+    window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {'analytics_storage': gcas, 'ad_storage': gcaa});gtag('js', new Date());
+    var config = {};    gtag('config', 'G-44KQ8HETWT', config);
+</script><script>
+(function(){
+    window.__browserSupports__ = [];
+    try{ 
+        var grid_supported = typeof document.createElement('div').style.grid === 'string';
+        grid_supported ? window.__browserSupports__.push('grid') : window.__browserSupports__.push('not:grid');
+    }catch(e){}
 
-            <div class="footer">
-    <div class="footer__copy">
-        &copy; i.Y &reg; - Votre éditeur     </div>
-</div>        
+    var interval = null;
+    var fn = function(){
+        document.body.setAttribute("data-browser-supports", window.__browserSupports__.join(" "));
+        clearInterval(interval);
+        interval = null;
+    }
 
+    interval = setInterval(function(){
+        if(document.body) fn();
+    }, 5);
+})();
+</script>
 
-<script>
-        var siteData = {
-        csrfParam: '_csrf-ilovepdf',
-        csrfToken: 'Ev-oWy-TIu8RsO3rnsaXOzdJhmLjH9-jRXJYPLeJ_GVLq_08Sddn2EnBpobHs_RiRy71FbZ0rPY0H3V1h-SJJg=='
-    };
+    </head>
+    <body class="lang-fr home  ">
+       
+            
+            <div class="home-title">
+                <img src="../static/img/IY.png" alt="I.Y" width="250px"
+                height="250px" />
+                
+            </div>
+            
+            <div class="tools ">
+                <div class="tools__container">
+                   
+                   
+                        <div class="tools__item" style="background: rgb(86, 168, 86);">
+                            <a href="{% url 'excel' %}" title="Fusionner PDF">
+                                <div class="tools__item__icon">
+                                    <img src="../static/img/excel.png" style="background:white"  width="40" height="40"  viewBox="0 0 50 50" />
+                                </div>
+                                <h3 style="color:white">Excel</h3>
+                            </a>
+                        </div>
+                    
+                    
+                    <div class="tools__item">
+                        <a href="{% url 'csv' %}" title="Fusionner PDF">
+                            <div class="tools__item__icon">
+                                <img src="../static/img/csv.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
+
+                            </div>
+                            <h3>CSV</h3>
+                           
+                        </a>
+                    </div>
+                    <div class="tools__item">
+                        <a href="{% url 'url' %}" title="Compresser PDF">
+                            <div class="tools__item__icon">
+                                <img src="../static/img/url.png" alt="I.Y" width="40" height="40" viewBox="0 0 50 50" />
+
+                            </div>
+                            <h3>Lien</h3>
+                          
+                        </a>
+                    </div>
+                    <div class="tools__item">
+                        <a href="{% url 'text' %}" title="PDF en Word">
+                            <div class="tools__item__icon">
+                                <img src="../static/img/fichier.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
+
+                            </div>
+                            <h3>Text</h3>
+                           
+                        </a>
+                    </div>
+                    <div class="tools__item">
+                        <a href="/fr/pdf_en_powerpoint"
+                            title="PDF en PowerPoint">
+                            <div class="tools__item__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="48" height="48" viewBox="0 0 50 50"><path
+                                        d="M32.324 15.656h-9.55c-2.477 0-3.375.258-4.28.742a5.06 5.06 0 0 0-2.098 2.102c-.484.902-.742 1.8-.742 4.277v9.55H5.18c-1.8 0-2.453-.187-3.113-.54a3.69 3.69 0 0 1-1.527-1.527C.188 29.598 0 28.945 0 27.145V5.18c0-1.8.188-2.453.54-3.113A3.69 3.69 0 0 1 2.066.539C2.727.188 3.38 0 5.18 0h21.965c1.8 0 2.453.188 3.113.54a3.69 3.69 0 0 1 1.527 1.527c.352.66.54 1.313.54 3.113zm0 0"
+                                        fill-rule="evenodd"
+                                        fill="rgb(95.294118%,85.098039%,80%)" /><path
+                                        d="M14.477 7.52c0-.477-.395-.863-.883-.863s-.883.387-.883.863v3.844L7.566 6.316a.89.89 0 0 0-1.246 0c-.168.16-.258.38-.258.61s.1.453.258.613l5.145 5.05H7.55c-.488 0-.883.387-.883.867s.395.863.883.863h6.047a.85.85 0 0 0 .34-.066c.215-.086.387-.254.477-.47.05-.102.066-.215.066-.328l.004-5.934zm0 0"
+                                        fill="rgb(81.568627%,27.058824%,14.901961%)" /><g
+                                        fill-rule="evenodd"><path
+                                            d="M22.855 17.676H44.82c1.8 0 2.453.188 3.113.543.648.344 1.184.875 1.527 1.527.352.656.54 1.31.54 3.11V44.82c0 1.8-.187 2.453-.54 3.113a3.69 3.69 0 0 1-1.527 1.527c-.66.352-1.312.54-3.113.54H22.855c-1.8 0-2.453-.187-3.113-.54-.648-.344-1.18-.88-1.527-1.527-.352-.66-.54-1.312-.54-3.113V22.855c0-1.8.188-2.453.54-3.113.348-.648.88-1.18 1.527-1.527.66-.352 1.313-.54 3.113-.54zm0 0"
+                                            fill="rgb(100%,46.27451%,31.764706%)" /><path
+                                            d="M38.367 34.648C37.28 35.55 35.828 36 34.008 36H32.39v5H29V26.5h5.313c3.79 0 5.688 1.54 5.688 4.62 0 1.453-.543 2.633-1.633 3.535zM33.82 29H32.5v4.5h1.32c1.785 0 2.68-.758 2.68-2.273 0-1.484-.89-2.227-2.68-2.227zm0 0"
+                                            fill="rgb(100%,100%,100%)" /></g></svg>
+                            </div>
+                            <h3>Autre</h3>
+                           
+                        </a>
+                    </div>
+
+                  
+
+                        <div class="centered-container">
+                            <button class="a">Visualiser</button>
+                            <button>Parcourir les données</button>
+                        </div>
+                        <style>.centered-container {
+                            display: flex;
+                            flex-direction: ligne;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100vw;
+                            height: 50vh;
+                           
+                        }
+                        .a {
+                            
+                            padding-left: 60px;
+                            padding-right: 60px;
+                        }
+                        button {
+                            margin: 10px;
+                            padding: 20px;
+                            font-size: 24px;
+                            background-color: rgb(86, 150, 86);
+                            border: 10px solid rgb(86, 150, 86);
+                            color:white;
+                            border-radius: 20px;
+                        }
+                        </style>
+                    
+                    
+                    
+                </div>
+
+                <script>
         var lang = 'fr';
     var brand = 'iLovePDF';
     var brand_ref = 'ilovepdf';
@@ -41,5 +217,5 @@
         'title': '<span style="color:#1D9D58">Bienvenue sur la toute nouvelle version de iLovePDF</span>'
     };
     </script>
-    <script src="/dist/js/app.a1136a7.js" async="async"></script></body>
-</html>
+                <script src="/dist/js/web.a1136a7.js" async="async"></script></body>
+        </html>
