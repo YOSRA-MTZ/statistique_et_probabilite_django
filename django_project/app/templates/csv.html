@@ -114,7 +114,7 @@
                    
                    
                         <div class="tools__item">
-                            <a href="" title="Fusionner PDF">
+                            <a href="{% url 'excel'%}" title="Excel">
                                 <div class="tools__item__icon">
                                     <img src="../static/img/excel.png"  width="40" height="40"  viewBox="0 0 50 50" />
                                 </div>
@@ -124,7 +124,7 @@
                     
                     
                     <div class="tools__item"  style="background: rgba(104,159,57,255);">
-                        <a href="{% url 'csv' %}" title="Fusionner PDF">
+                        <a href="{% url 'csv' %}" title="Csv">
                             <div class="tools__item__icon">
                                 <img src="../static/img/csv.png" alt="I.Y" style="background:white"   width="40" height="40" viewBox="0 0 50 50" />
 
@@ -134,7 +134,7 @@
                         </a>
                     </div>
                     <div class="tools__item">
-                        <a href="" title="Compresser PDF">
+                        <a href="{% url 'url'%}" title="Lien">
                             <div class="tools__item__icon">
                                 <img src="../static/img/url.png" alt="I.Y" width="40" height="40" viewBox="0 0 50 50" />
 
@@ -144,7 +144,7 @@
                         </a>
                     </div>
                     <div class="tools__item">
-                        <a href="" title="PDF en Word">
+                        <a href="{% url 'text'%}" title="Text">
                             <div class="tools__item__icon">
                                 <img src="../static/img/fichier.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
 
@@ -154,13 +154,13 @@
                         </a>
                     </div>
                     <div class="tools__item">
-                        <a href="/fr/pdf_en_powerpoint"
-                            title="PDF en PowerPoint">
+                        <a href="{% url 'image'%}"
+                            title="image">
                             <div class="tools__item__icon">
                                 <img src="../static/img/autre.png" alt="I.Y"  width="40" height="40" viewBox="0 0 60 60" />
 
                             </div>
-                            <h3>Autre</h3>
+                            <h3>Image</h3>
                            
                         </a>
                     </div>
@@ -168,6 +168,8 @@
                   
 
                         <div class="centered-container">
+                           
+
                             <button class="a">Visualiser</button>
                             <button>Parcourir les données</button>
                         </div>

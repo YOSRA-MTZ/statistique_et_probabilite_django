@@ -15,3 +15,7 @@ def csv(request):
 
 def url(request):
         return render(request, 'url.html')
+
+
+def image(request):
+        return render(request, 'image.html')

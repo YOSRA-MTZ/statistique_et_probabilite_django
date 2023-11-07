@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css"
             href="{% static 'css/style.css' %}">
             <link href="{% static 'webfonts/all.min.css' %}" rel="stylesheet">
+
         {% endblock %}
         <meta charset="UTF-8">
         <title>
@@ -99,8 +100,8 @@
     </head>
     <body class="lang-fr home  ">
        
-            
-            <!-- <div class="home-title">
+       
+            <!-- 
                 <img src="../static/img/IY.png" alt="I.Y" width="250px"
                 height="250px" />
                 
@@ -108,31 +109,32 @@
             <div style="margin-top:100px;margin:40px;"><a href="{% url 'app' %}" style="color:black"> <i class="fa fa-arrow-left"></i> Retour </a></div>
 
             <div class="tools " style="margin-top: 100px;">
+                
                 <div class="tools__container">
                    
                    
-                        <div class="tools__item" style="background: rgba(31,113,67,255);">
-                            <a href="{% url 'excel' %}" title="Excel">
+                        <div class="tools__item">
+                            <a href="{% url 'excel'%}" title="Excel">
                                 <div class="tools__item__icon">
-                                    <img src="../static/img/excel.png" style="background:white"  width="40" height="40"  viewBox="0 0 50 50" />
+                                    <img src="../static/img/excel.png"  width="40" height="40"  viewBox="0 0 50 50" />
                                 </div>
-                                <h3 style="color:white">Excel</h3>
+                                <h3 >Excel</h3>
                             </a>
                         </div>
                     
                     
-                    <div class="tools__item">
+                    <div class="tools__item"  >
                         <a href="{% url 'csv' %}" title="Csv">
                             <div class="tools__item__icon">
-                                <img src="../static/img/csv.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
+                                <img src="../static/img/csv.png" alt="I.Y"    width="40" height="40" viewBox="0 0 50 50" />
 
                             </div>
-                            <h3>CSV</h3>
+                            <h3 >CSV</h3>
                            
                         </a>
                     </div>
                     <div class="tools__item">
-                        <a href="{% url 'url' %}" title="Lien">
+                        <a href="{% url 'url'%}" title="Lien">
                             <div class="tools__item__icon">
                                 <img src="../static/img/url.png" alt="I.Y" width="40" height="40" viewBox="0 0 50 50" />
 
@@ -142,7 +144,7 @@
                         </a>
                     </div>
                     <div class="tools__item">
-                        <a href="{% url 'text' %}" title="Text">
+                        <a href="{% url 'text'%}" title="Text">
                             <div class="tools__item__icon">
                                 <img src="../static/img/fichier.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
 
@@ -151,14 +153,14 @@
                            
                         </a>
                     </div>
-                    <div class="tools__item">
+                    <div class="tools__item" style="background: rgba(6,154,184,255);">
                         <a href="{% url 'image'%}"
                             title="image">
                             <div class="tools__item__icon">
-                                <img src="../static/img/autre.png" alt="I.Y"  width="40" height="40" viewBox="0 0 60 60" />
+                                <img src="../static/img/autre.png" alt="I.Y" style="background:white" width="40" height="40" viewBox="0 0 60 60" />
 
                             </div>
-                            <h3>Image</h3>
+                            <h3 style="color:white">Image</h3>
                            
                         </a>
                     </div>
@@ -166,10 +168,10 @@
                   
 
                         <div class="centered-container">
-                          
+                           
 
-                            <button class="a">Visualiser</button>
-                            <button>Parcourir les données</button>
+                            <!-- <button class="a">Visualiser</button>
+                            <button>Parcourir les données</button> -->
                         </div>
                         <style>.centered-container {
                             display: flex;
@@ -189,8 +191,8 @@
                             margin: 10px;
                             padding: 20px;
                             font-size: 24px;
-                            background-color: rgba(31,113,67,255);
-                            border: 10px solid rgba(31,113,67,255);
+                            background-color: rgba(104,159,57,255);
+                            border: 10px solid rgba(104,159,57,255);
                             color:white;
                             border-radius: 20px;
                         }
