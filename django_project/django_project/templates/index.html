@@ -16,98 +16,66 @@
     </head>
     <body class="lang-fr home  ">
 
-        <div class="centered-container">
+        <div class="tools">
 
-            <button><i class="fa fa-upload"></i> Sélectionner le fichier</button>
-            <input type="text" placeholder="Veuillez saisir l'url">
-        </div>
-        <style>
-        .centered-container {
-            display: flex;
-            flex-direction: ligne;
-            align-items: center;
-            justify-content: center;
-           
-            margin-top: 200px;
-           
-        }
-        input {
-            margin: 10px;
-            padding: 20px;
-            font-size: 30px;
-            background-color: rgb(250, 178, 178);
-            border: 10px solid rgb(250, 178, 178);
-            color:black;
-            border-radius: 20px;
-        }
-        button {
-            margin: 10px;
-            padding: 20px;
-            font-size: 30px;
-            background-color: rgb(245, 75, 75);
-            border: 10px solid rgb(245, 75, 75);
-            color:white;
-            border-radius: 20px;
-        }
-        </style>
+            <div class="tools__container" style="margin-top: 200px;">
+                <div class="tools__item">
+                    <a href="{% url 'excel' %}" title="Fusionner PDF">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/excel.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 60 60" />
+                        </div>
+                        <h3>Excel</h3>
 
-        <!-- <div class="tools">
-           <h1 style="font-size:28px"> ou Choisir votre type de fichier</h1>     
-                <div class="tools__container" style="margin-top: 15px;">
-                    <div class="tools__item">
-                        <a href="{% url 'excel' %}" title="Fusionner PDF">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/excel.png" alt="I.Y"  width="40" height="40" viewBox="0 0 60 60" />
-                            </div>
-                            <h3>Excel</h3>
-                           
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="{% url 'csv' %}" title="Fusionner PDF">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/csv.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="{% url 'csv' %}" title="Fusionner PDF">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/csv.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 50 50" />
 
-                            </div>
-                            <h3>CSV</h3>
-                           
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="{% url 'url' %}" title="Compresser PDF">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/url.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
+                        </div>
+                        <h3>CSV</h3>
 
-                            </div>
-                            <h3>Lien</h3>
-                          
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="{% url 'text' %}" title="PDF en Word">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/fichier.png" alt="I.Y"  width="40" height="40" viewBox="0 0 50 50" />
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="{% url 'url' %}" title="Compresser PDF">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/url.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 50 50" />
 
-                            </div>
-                            <h3>Text</h3>
-                           
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="/fr/pdf_en_powerpoint"
-                            title="PDF en PowerPoint">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/autre.png" alt="I.Y"  width="40" height="40" viewBox="0 0 60 60" />
+                        </div>
+                        <h3>Lien</h3>
 
-                            </div>
-                            <h3>Autre</h3>
-                           
-                        </a>
-                    </div>
-                   
-                
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="{% url 'text' %}" title="PDF en Word">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/fichier.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 50 50" />
 
-                </div> -->
+                        </div>
+                        <h3>Text</h3>
 
-    </body>
-</html>
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="/fr/pdf_en_powerpoint"
+                        title="Image">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/autre.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 60 60" />
+
+                        </div>
+                        <h3>Image</h3>
+
+                    </a>
+                </div>
+
+            </div>
+
+        </body>
+    </html>

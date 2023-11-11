@@ -163,20 +163,50 @@
                         </a>
                     </div>
 
-                  
-
-                        <div class="centered-container">
-
-                            <button class="a">Visualiser</button>
-                            <button>Parcourir les données</button>
+                    <form method="post" enctype="multipart/form-data" id="fileUploadForm"> 
+                        <div class="centered">
+                            <input type="file" name="file" id="fileInput" accept=".txt">
                         </div>
-                        <style>.centered-container {
+                        <div class="centered-container">
+                            {% if error_message %}
+                                <p>{{ error_message }}</p>
+                            {% endif %}
+                            <button class="a" id="visualiserButton" style="display: none;">Visualiser</button>
+                            <button id="parcourirButton" style="display: none;">Parcourir les données</button>
+                        </div>
+                    </form>
+                
+                    <script>
+                        document.getElementById('fileInput').addEventListener('change', function () {
+                            // Show the buttons when a file is selected
+                            document.getElementById('visualiserButton').style.display = 'inline-block';
+                            document.getElementById('parcourirButton').style.display = 'inline-block';
+                        });
+                
+                        document.getElementById('visualiserButton').addEventListener('click', function () {
+                           
+                        });
+                
+                        document.getElementById('parcourirButton').addEventListener('click', function () {
+                            
+                        });
+                    </script>
+                <style>.centered-container {
                             display: flex;
                             flex-direction: ligne;
                             align-items: center;
                             justify-content: center;
                             width: 100vw;
-                            height: 50vh;
+                            height: 10vh;
+                           
+                        }
+                        .centered {
+                            display: flex;
+                            flex-direction: ligne;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100vw;
+                            height: 30vh;
                            
                         }
                         .a {
@@ -186,6 +216,7 @@
                         }
                         button {
                             margin: 10px;
+                           
                             padding: 20px;
                             font-size: 24px;
                             background-color: rgba(182,64,50,255);
@@ -193,8 +224,21 @@
                             color:white;
                             border-radius: 20px;
                         }
+                        input {
+                            padding: 20px;
+                            font-size: 24px;
+                            background-color: rgba(182,64,50,255);
+                            border: 10px solid rgba(182,64,50,255);
+                            color: white;
+                            border-radius: 20px;
+                           
+                          }
+                          
+                           
+                        
                         </style>
-                    
+
+                       
                     
                     
                 </div>

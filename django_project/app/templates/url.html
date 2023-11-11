@@ -96,6 +96,8 @@
 })();
 </script>
 
+
+
     </head>
     <body class="lang-fr home  ">
        
@@ -165,18 +167,63 @@
 
                   
 
-                        <div class="centered-container">
-
-                            <button class="a">Visualiser</button>
-                            <button>Parcourir les données</button>
+                    <form method="post" enctype="multipart/form-data" id="fileUploadForm"> 
+                        <div class="centered">
+                            <input type="text" name="url" id="urlInput" placeholder="Saisir l'URL" style="color: beige;">
                         </div>
-                        <style>.centered-container {
+                        <div class="centered-container">
+                            {% csrf_token %}
+                            <button type="button" id="visualiserButton" style="display: none;">Visualiser</button>
+                            <button type="button" id="parcourirButton" style="display: none;">Parcourir les données</button>
+                        </div>
+                    </form>
+                
+                    <script>
+                        document.getElementById('urlInput').addEventListener('input', function () {
+                            var urlInput = document.getElementById('urlInput');
+                      
+                            var visualiserButton = document.getElementById('visualiserButton');
+                            var parcourirButton = document.getElementById('parcourirButton');
+                
+                            // Show the buttons when the URL input is not empty
+                            if (urlInput.value.trim() !== '') {
+                               
+                                visualiserButton.style.display = 'inline-block';
+                                parcourirButton.style.display = 'inline-block';
+                            } else {
+                               
+                                visualiserButton.style.display = 'none';
+                                parcourirButton.style.display = 'none';
+                            }
+                        });
+                        document.getElementById('visualiserButton').addEventListener('click', function () {
+                       
+                        });
+                
+                        document.getElementById('parcourirButton').addEventListener('click', function () {
+                            
+                        });
+                    </script>
+                <style>
+                    input::placeholder {
+                        color: rgb(189, 188, 188) !important;
+                    }
+                    .centered-container {
                             display: flex;
                             flex-direction: ligne;
                             align-items: center;
                             justify-content: center;
                             width: 100vw;
-                            height: 50vh;
+                            height: 10vh;
+                           
+                        }
+                        .centered {
+                            display: flex;
+                            flex-direction: ligne;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100vw;
+                            height: 30vh;
                            
                         }
                         .a {
@@ -186,14 +233,29 @@
                         }
                         button {
                             margin: 10px;
+                           
                             padding: 20px;
                             font-size: 24px;
-                            background-color: rgba(69,144,198,255);
-                            border: 10px solid rgba(69,144,198,255);
+                            background-color:  rgba(69,144,198,255);
+                            border: 10px solid  rgba(69,144,198,255);
                             color:white;
                             border-radius: 20px;
                         }
+                        input {
+                            padding: 20px;
+                            font-size: 24px;
+                            background-color:  rgba(69,144,198,255);
+                            border: 10px solid  rgba(69,144,198,255);
+                            color: white;
+                            border-radius: 20px;
+                           
+                          }
+                          
+                           
+                        
                         </style>
+
+                      
                     
                     
                     

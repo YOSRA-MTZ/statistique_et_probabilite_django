@@ -5,7 +5,7 @@
         {% block styles %}
         <link rel="stylesheet" type="text/css"
             href="{% static 'css/style.css' %}">
-            <link href="{% static 'webfonts/all.min.css' %}" rel="stylesheet">
+        <link href="{% static 'webfonts/all.min.css' %}" rel="stylesheet">
         {% endblock %}
         <meta charset="UTF-8">
         <title>
@@ -98,86 +98,120 @@
 
     </head>
     <body class="lang-fr home  ">
-       
-            
-            <!-- <div class="home-title">
+
+        <!-- <div class="home-title">
                 <img src="../static/img/IY.png" alt="I.Y" width="250px"
                 height="250px" />
                 
             </div> -->
-            <div style="margin-top:100px;margin:40px;"><a href="{% url 'app' %}" style="color:black"> <i class="fa fa-arrow-left"></i> Retour </a></div>
+        <div style="margin-top:100px;margin:40px;"><a href="{% url 'app' %}"
+                style="color:black"> <i class="fa fa-arrow-left"></i> Retour
+            </a></div>
 
-            <div class="tools " style="margin-top: 100px;">
-                <div class="tools__container">
-                   
-                   
-                        <div class="tools__item" style="background: rgba(31,113,67,255);">
-                            <a href="{% url 'excel' %}" title="Excel">
-                                <div class="tools__item__icon">
-                                    <img src="../static/img/excel.png" style="background:white"  width="40" height="40"  viewBox="0 0 50 50" />
-                                </div>
-                                <h3 style="color:white">Excel</h3>
-                            </a>
+        <div class="tools " style="margin-top: 100px;">
+            <div class="tools__container">
+
+                <div class="tools__item" style="background:rgb(31, 113, 67);">
+                    <a href="{% url 'excel' %}" title="Excel">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/excel.png"
+                                style="background:white" width="40" height="40"
+                                viewBox="0 0 50 50" />
                         </div>
-                    
-                    
-                    <div class="tools__item">
-                        <a href="{% url 'csv' %}" title="Csv">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/csv.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
+                        <h3 style="color:white">Excel</h3>
+                    </a>
+                </div>
 
-                            </div>
-                            <h3>CSV</h3>
-                           
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="{% url 'url' %}" title="Lien">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/url.png" alt="I.Y" width="40" height="40" viewBox="0 0 50 50" />
+                <div class="tools__item">
+                    <a href="{% url 'csv' %}" title="Csv">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/csv.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 50 50" />
 
-                            </div>
-                            <h3>Lien</h3>
-                          
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="{% url 'text' %}" title="Text">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/fichier.png" alt="I.Y"   width="40" height="40" viewBox="0 0 50 50" />
-
-                            </div>
-                            <h3>Text</h3>
-                           
-                        </a>
-                    </div>
-                    <div class="tools__item">
-                        <a href="{% url 'image'%}"
-                            title="image">
-                            <div class="tools__item__icon">
-                                <img src="../static/img/autre.png" alt="I.Y"  width="40" height="40" viewBox="0 0 60 60" />
-
-                            </div>
-                            <h3>Image</h3>
-                           
-                        </a>
-                    </div>
-
-                  
-
-                        <div class="centered-container">
-                          
-
-                            <button class="a">Visualiser</button>
-                            <button>Parcourir les données</button>
                         </div>
-                        <style>.centered-container {
+                        <h3>CSV</h3>
+
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="{% url 'url' %}" title="Lien">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/url.png" width="40"
+                                height="40" viewBox="0 0 50 50" />
+
+                        </div>
+                        <h3>Lien</h3>
+
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="{% url 'text' %}" title="Text">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/fichier.png" width="40"
+                                height="40" viewBox="0 0 50 50" />
+
+                        </div>
+                        <h3>Text</h3>
+
+                    </a>
+                </div>
+                <div class="tools__item">
+                    <a href="{% url 'image'%}"
+                        title="image">
+                        <div class="tools__item__icon">
+                            <img src="../static/img/autre.png" alt="I.Y"
+                                width="40" height="40" viewBox="0 0 60 60" />
+
+                        </div>
+                        <h3>Image</h3>
+
+                    </a>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" id="fileUploadForm"> 
+                    <div class="centered">
+                        <input type="file" name="file" id="fileInput" accept=".xls, .xlsx">
+                    </div>
+                    <div class="centered-container">
+                        {% if error_message %}
+                            <p>{{ error_message }}</p>
+                        {% endif %}
+                        <button class="a" id="visualiserButton" style="display: none;">Visualiser</button>
+                        <button id="parcourirButton" style="display: none;">Parcourir les données</button>
+                    </div>
+                </form>
+            
+                <script>
+                    document.getElementById('fileInput').addEventListener('change', function () {
+                        // Show the buttons when a file is selected
+                        document.getElementById('visualiserButton').style.display = 'inline-block';
+                        document.getElementById('parcourirButton').style.display = 'inline-block';
+                    });
+            
+                    document.getElementById('visualiserButton').addEventListener('click', function () {
+                       
+                    });
+            
+                    document.getElementById('parcourirButton').addEventListener('click', function () {
+                        
+                    });
+                </script>
+                <style>.centered-container {
                             display: flex;
                             flex-direction: ligne;
                             align-items: center;
                             justify-content: center;
                             width: 100vw;
-                            height: 50vh;
+                            height: 10vh;
+                           
+                        }
+                        .centered {
+                            display: flex;
+                            flex-direction: ligne;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100vw;
+                            height: 30vh;
                            
                         }
                         .a {
@@ -187,28 +221,28 @@
                         }
                         button {
                             margin: 10px;
+                           
                             padding: 20px;
                             font-size: 24px;
-                            background-color: rgba(31,113,67,255);
-                            border: 10px solid rgba(31,113,67,255);
+                            background-color: rgb(31, 113, 67);
+                            border: 10px solid rgb(31, 113, 67);
                             color:white;
                             border-radius: 20px;
                         }
+                        input {
+                            padding: 20px;
+                            font-size: 24px;
+                            background-color: rgb(31, 113, 67);
+                            border: 10px solid rgb(31, 113, 67);
+                            color: white;
+                            border-radius: 20px;
+                           
+                          }
+                          
+                           
+                        
                         </style>
-                    
-                    
-                    
-                </div>
 
-                <script>
-        var lang = 'fr';
-    var brand = 'iLovePDF';
-    var brand_ref = 'ilovepdf';
-            var nds = {
-        'ck': 0,
-        'content': '<p>Nous espérons que notre nouveau site vous plaira, et que vous le trouverez simple d\'utilisation.<br>Si vous rencontrez le moindre souci, merci de <a href=\"/fr/contacter\">nous le faire savoir</a>.<br>Nous pouvons régler tout problème dont nous sommes informés.</p>',
-        'title': '<span style="color:#1D9D58">Bienvenue sur la toute nouvelle version de iLovePDF</span>'
-    };
-    </script>
-                <script src="/dist/js/web.a1136a7.js" async="async"></script></body>
-        </html>
+            </div>
+        </body>
+    </html>

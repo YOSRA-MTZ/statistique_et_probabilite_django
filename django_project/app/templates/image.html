@@ -165,38 +165,107 @@
                         </a>
                     </div>
 
-                  
-
-                        <div class="centered-container">
-                           
-
-                            <!-- <button class="a">Visualiser</button>
-                            <button>Parcourir les données</button> -->
+                    <form method="post" enctype="multipart/form-data" id="fileUploadForm"> 
+                        <div class="centered">
+                            <input type="file" name="image" id="imageInput" accept=".png, .jpg, .jpeg">
                         </div>
-                        <style>.centered-container {
-                            display: flex;
-                            flex-direction: ligne;
-                            align-items: center;
-                            justify-content: center;
-                            width: 100vw;
-                            height: 50vh;
-                           
+                        <div class="centered-container">
+                            {% csrf_token %}
+                            <!-- No need for a separate submit button -->
+                        </div>
+                    </form>
+                    
+                    <div id="imageContainer" style="display: none;">
+                        
+                        <img id="uploadedImage" alt="Uploaded Image">
+                    </div>
+                    
+                    <div id="histogramContainer" style="display: none;">
+                       
+                        <canvas id="histogramCanvas" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    
+                    <script>
+                        document.getElementById('imageInput').addEventListener('change', function () {
+                            var imageInput = document.getElementById('imageInput');
+                            var imageContainer = document.getElementById('imageContainer');
+                            var uploadedImage = document.getElementById('uploadedImage');
+                            var histogramContainer = document.getElementById('histogramContainer');
+                            var histogramCanvas = document.getElementById('histogramCanvas');
+                            var ctx = histogramCanvas.getContext('2d');
+                    
+                            if (imageInput.files.length > 0) {
+                               
+                                var img = new Image();
+                                img.src = URL.createObjectURL(imageInput.files[0]);
+                                uploadedImage.src = img.src;
+                    
+                                imageContainer.style.display = 'block';
+                                histogramContainer.style.display = 'block';
+                    
+                                // Process the image and draw histogram
+                                drawHistogram(img, ctx);
+                            }
+                        });
+                    
+                     
+                          
+                    </script>
+                    
+                    
+                    <style>
+                        input::placeholder {
+                            color: rgb(189, 188, 188) !important;
                         }
-                        .a {
+                        .centered-container {
+                                display: flex;
+                                flex-direction: ligne;
+                                align-items: center;
+                                justify-content: center;
+                                width: 100vw;
+                                height: 10vh;
+                               
+                            }
+                            .centered {
+                                display: flex;
+                                flex-direction: ligne;
+                                align-items: center;
+                                justify-content: center;
+                                width: 100vw;
+                                height: 30vh;
+                               
+                            }
+                            .a {
+                                
+                                padding-left: 60px;
+                                padding-right: 60px;
+                            }
+                            button {
+                                margin: 10px;
+                               
+                                padding: 20px;
+                                font-size: 24px;
+                                background-color:  rgba(69,144,198,255);
+                                border: 10px solid  rgba(69,144,198,255);
+                                color:white;
+                                border-radius: 20px;
+                            }
+                            input {
+                                padding: 20px;
+                                font-size: 24px;
+                                background-color:  rgba(69,144,198,255);
+                                border: 10px solid  rgba(69,144,198,255);
+                                color: white;
+                                border-radius: 20px;
+                               
+                              }
+                              
+                               
                             
-                            padding-left: 60px;
-                            padding-right: 60px;
-                        }
-                        button {
-                            margin: 10px;
-                            padding: 20px;
-                            font-size: 24px;
-                            background-color: rgba(104,159,57,255);
-                            border: 10px solid rgba(104,159,57,255);
-                            color:white;
-                            border-radius: 20px;
-                        }
-                        </style>
+                            </style>
+    
                     
                     
                     
