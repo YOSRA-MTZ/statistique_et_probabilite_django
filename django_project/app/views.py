@@ -14,34 +14,32 @@ import base64
 def index(request):
    
     return render(request, 'index.html')
-
-
 def excel(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
+
         if form.is_valid():
             fichier = request.FILES['file']
-            traitement_choice = request.POST['processing_choice']
-
-            # Vérifiez si le fichier est un fichier Excel
+           
             if fichier.name.endswith(('.xls', '.xlsx')):
-                # Faites ce que vous voulez avec le fichier Excel
-                if traitement_choice == 'votre_traitement':
-                    # Exemple : Lecture du fichier Excel avec pandas
-                    df = pd.read_excel(fichier)
-                    # Faites quelque chose avec le DataFrame 'df'
-                    return render(request, 'excel.html', {'df': df})
-                else:
-                    return HttpResponse("Traitement non pris en charge")
+                data = pd.read_excel(fichier)
+                df = pd.DataFrame(data)
+                return render(request, 'visualiser_data.html', {'df': df.to_html(classes='table table-bordered')})
             else:
                 return HttpResponse("Seuls les fichiers Excel (.xls, .xlsx) sont autorisés. Veuillez télécharger un fichier Excel.")
-
     else:
         form = FileUploadForm()
 
     return render(request, 'excel.html', {'form': form})
 
- 
+
+
+def visualiser(request): 
+    return render(request, 'visualiser_data.html')  
+
+    
+
+
 def text(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
@@ -51,9 +49,9 @@ def text(request):
             # Check if the file is a txt file
             if fichier.name.endswith('.txt'):
                 # Process the txt file
-                df = pd.read_csv(fichier, sep='\t')  # Assuming tab-separated data, adjust 'sep' based on your file format
-                # You can now use 'df' for further processing or display
-                return render(request, 'text_result.html', {'df': df})
+                data = pd.read_csv(fichier, sep='\t') 
+                df = pd.DataFrame(data)
+                return render(request, 'visualiser_data.html', {'df': df.to_html(classes='table table-bordered')})
             else:
                 return HttpResponse("Seuls les fichiers text sont autorisés. Veuillez télécharger un fichier txt.")
     else:
