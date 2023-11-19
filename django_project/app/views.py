@@ -1,7 +1,6 @@
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import FileUploadForm
 import pandas as pd  # Note the corrected import statement
 import requests
 from PIL import Image
@@ -10,21 +9,92 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
 import base64
+from django.http import HttpResponse
+from .forms import FileUploadForm, VisualizationForm
+
 
 def index(request):
    
     return render(request, 'index.html')
+# views.py
+def generate_chart(df, chart_type, column_name_1, column_name_2=None):
+    # Ajoutez votre logique pour générer le graphique en fonction du type de diagramme
+    # et des colonnes spécifiées.
+    if chart_type == 'barplot':
+        # Exemple : Créer un diagramme à barres
+        plt.bar(df[column_name_1], df[column_name_2])
+        plt.xlabel(column_name_1)
+        plt.ylabel(column_name_2)
+        plt.title('Bar Plot')
+    elif chart_type == 'histogram':
+        # Exemple : Créer un histogramme
+        plt.hist(df[column_name_1])
+        plt.xlabel(column_name_1)
+        plt.ylabel('Fréquence')
+        plt.title('Histogramme')
+
+    # Convertir le graphique en base64
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    plt.close()
+
+    plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    return plot_data
+
 def excel(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            fichier = request.FILES['file']
-           
+            # Utilisez 'file' comme nom de champ pour accéder au fichier dans le formulaire
+            fichier = request.FILES['file']  # Mettez à jour cette ligne
+
             if fichier.name.endswith(('.xls', '.xlsx')):
-                data = pd.read_excel(fichier)
-                df = pd.DataFrame(data)
-                return render(request, 'visualiser_data.html', {'df': df.to_html(classes='table table-bordered')})
+                try:
+                    data = pd.read_excel(fichier)
+                    df = pd.DataFrame(data)
+
+                    # Créez une liste de choix de colonnes basée sur les colonnes du DataFrame
+                    columns_choices = [(col, col) for col in df.columns]
+
+                    # Initialisez le formulaire avec les choix de colonnes
+                    visualization_form = VisualizationForm()
+                    visualization_form.fields['column_name_1'].choices = columns_choices
+                    visualization_form.fields['column_name_2'].choices = columns_choices
+
+                    if visualization_form.is_valid():
+                        chart_type = visualization_form.cleaned_data['chart_type']
+                        column_name_1 = visualization_form.cleaned_data['column_name_1']
+                        column_name_2 = visualization_form.cleaned_data['column_name_2']
+
+                        try:
+                            plot_data = generate_chart(df, chart_type, column_name_1, column_name_2)
+                            if plot_data is not None:
+                                return render(
+                                    request,
+                                    'diagramme.html',
+                                    {'form': form, 'visualization_form': visualization_form, 'df': df.to_html(classes='table table-bordered'), 'plot_data': plot_data},
+                                )
+                            else:
+                                return HttpResponse("Type de diagramme non pris en charge.")
+                        except KeyError as e:
+                            error_message = f"Erreur : La colonne spécifiée n'existe pas dans le DataFrame. Colonnes disponibles : {', '.join(df.columns)}"
+                            return render(
+                                request,
+                                'visualiser_data.html',
+                                {'form': form, 'visualization_form': visualization_form, 'error_message': error_message, 'column_names': df.columns},
+                            )
+                    else:
+                        return render(
+                            request,
+                            'visualiser_data.html',
+                            {'form': form, 'visualization_form': visualization_form, 'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
+                        )
+                except pd.errors.ParserError as e:
+                    error_message = f"Erreur : Impossible de lire le fichier Excel. Assurez-vous que le fichier est au format Excel valide."
+                    return render(request, 'excel.html', {'form': form, 'error_message': error_message})
             else:
                 return HttpResponse("Seuls les fichiers Excel (.xls, .xlsx) sont autorisés. Veuillez télécharger un fichier Excel.")
     else:
@@ -35,9 +105,11 @@ def excel(request):
 
 
 def visualiser(request): 
-    return render(request, 'visualiser_data.html')  
+    return render(request, 'visualiser_data.html')
 
-    
+
+def diagramme(request):
+    return render(request, 'diagramme.html')
 
 
 def text(request):
