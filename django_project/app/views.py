@@ -7,40 +7,88 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from io import BytesIO
+from io import StringIO, BytesIO
 import base64
 from .forms import FileUploadForm, VisualizationForm
 import json
-
+import matplotlib
+matplotlib.use('Agg')
 
 def index(request):
    
     return render(request, 'index.html')
 # views.py
 def generate_chart(df, type_chart, col1, col2):
-    
+    buffer = BytesIO()
+
     if type_chart == 'bar':
-        # Exemple : Créer un diagramme à barres
         plt.bar(df[col1], df[col2])
         plt.xlabel(col1)
         plt.ylabel(col2)
         plt.title('Bar Plot')
+
     elif type_chart == 'histogram':
-        # Exemple : Créer un histogramme
         plt.hist(df[col1])
         plt.xlabel(col1)
         plt.ylabel('Fréquence')
         plt.title('Histogramme')
 
-    # Convertir le graphique en base64
-    buffer = BytesIO()
+    elif type_chart == 'piechart':
+        plt.pie(df[col1], labels=df[col2])
+        plt.title('Pie Chart')
+
+    elif type_chart == 'histplot':
+        sns.histplot(df[col1])
+        plt.xlabel(col1)
+        plt.ylabel('Count')
+        plt.title('Histogram Plot')
+
+    elif type_chart == 'scatterplot':
+        plt.scatter(df[col1], df[col2])
+        plt.xlabel(col1)
+        plt.ylabel(col2)
+        plt.title('Scatter Plot')
+
+    elif type_chart == 'heatmap':
+        pivot_table = df.pivot_table(index=col1, columns=col2, aggfunc=len)
+        sns.heatmap(pivot_table, cmap='coolwarm')
+        plt.title('Heatmap')
+
+    elif type_chart == 'lineplot':
+        plt.plot(df[col1], df[col2]) 
+        plt.xlabel(col1)
+        plt.ylabel(col2)
+        plt.title('Line Plot')
+
+    elif type_chart == 'boxplot':
+        sns.boxplot(x=df[col1], y=df[col2])
+        plt.xlabel(col1)
+        plt.ylabel(col2)
+        plt.title('Box Plot')
+
+    elif type_chart == 'violinplot':
+        sns.violinplot(x=df[col1], y=df[col2])
+        plt.xlabel(col1)
+        plt.ylabel(col2)
+        plt.title('Violin Plot')
+        
+    elif type_chart == 'kdeplot':
+        # Vérifier si la colonne contient des données numériques
+        if pd.api.types.is_numeric_dtype(df[col1]):
+            sns.kdeplot(df[col1], shade=True)
+            plt.xlabel(col1)
+            plt.title('KDE Plot')
+        else:
+           
+            plt.text(0.5, 0.5, "Cette colonne ne contient pas de données numériques", ha='center', va='center', fontsize=12)
+            plt.axis('off')  
+
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     plt.close()
 
-    plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    return buffer
 
-    return plot_data
 
 def excel(request):
     if request.method == 'POST':
@@ -89,19 +137,18 @@ def visualiser_chart(request):
         type_chart = request.POST['type_chart']
         df_json = request.session.get('df_json')
         
-        # Convertir la chaîne JSON en objet JSON
-        df_json = json.loads(df_json)
-        
-        # Normaliser les données JSON en DataFrame
-        df = pd.json_normalize(df_json)
+        df_json_io = StringIO(df_json)
+        df = pd.read_json(df_json_io)
         
         chart = generate_chart(df, type_chart, col1, col2)
+        plot_data = base64.b64encode(chart.getvalue()).decode('utf-8')
+        
         context = {
-            'chart': chart 
+            'chart': plot_data 
         }
         
-        return render(request, 'diagramme.html', {'context': context})  
-        
+        return render(request, 'diagramme.html', context)  
+    
     return render(request, 'visualiser_data.html')
 
 

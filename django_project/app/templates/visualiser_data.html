@@ -17,10 +17,16 @@
         <form method="post" action="{% url 'visualiser_chart' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <select id="type_chart" name="type_chart">
-                <option value="bar">Bar Chart</option>
-                <option value="pie">Pie Chart</option>
-                
-                <option value="line">Line Chart</option>
+                <option value="bar">Barplot</option>
+                <option value="histogram">histogram</option>
+                <option value="piechart">piechart</option>
+                <option value="histplot">Histplot</option>
+                <option value="scatterplot">Scatterplot</option>
+                <option value="heatmap">heatmap</option>
+                <option value="lineplot">lineplot</option>
+                <option value="boxplot">boxplot</option>
+                <option value="violinplot">violinplot</option>
+                <option value="kdeplot">kdeplot</option>
             </select>
             <select id="col_name1" name="col_name1">
             {% for col in column_names %}
