@@ -3,7 +3,8 @@ from django import forms
 class FileUploadForm(forms.Form):
     csv_file = forms.FileField(label='Fichier CSV', required=False)
     excel_file = forms.FileField(label='Fichier Excel', required=False)
-    file = forms.FileField(required=True)
+    file = forms.FileField()
+
     text_file = forms.FileField(label='Fichier Texte', required=False)
     image_file = forms.ImageField(label='Image', required=False)
     
@@ -25,8 +26,8 @@ class VisualizationForm(forms.Form):
         ('piechart', 'Diagramme circulaire'),
     ]
 
-    chart_type = forms.ChoiceField(choices=CHART_CHOICES, label='Type de Diagramme')
-    column_name_1 = forms.ChoiceField(choices=[], label='Nom de la colonne 1')
+    chart_type = forms.ChoiceField(choices=CHART_CHOICES, label='Type de Diagramme', required=False)
+    column_name_1 = forms.ChoiceField(choices=[], label='Nom de la colonne 1', required=False)
     column_name_2 = forms.ChoiceField(choices=[], label='Nom de la colonne 2', required=False)
 
    

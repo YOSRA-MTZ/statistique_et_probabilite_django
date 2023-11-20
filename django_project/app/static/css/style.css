@@ -592,7 +592,7 @@
     padding: 4px;
     display: inline-block;
     zoom: 1;
-    *display: inline;
+    display: inline;
     border: 1px solid #91765d;
     background: #eee;
     color: #333;
@@ -630,7 +630,7 @@
 }
 
 .sp-palette {
-    *width: 220px;
+    width: 220px;
     max-width: 220px
 }
 

@@ -9,27 +9,26 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
 import base64
-from django.http import HttpResponse
 from .forms import FileUploadForm, VisualizationForm
+import json
 
 
 def index(request):
    
     return render(request, 'index.html')
 # views.py
-def generate_chart(df, chart_type, column_name_1, column_name_2=None):
-    # Ajoutez votre logique pour générer le graphique en fonction du type de diagramme
-    # et des colonnes spécifiées.
-    if chart_type == 'barplot':
+def generate_chart(df, type_chart, col1, col2):
+    
+    if type_chart == 'bar':
         # Exemple : Créer un diagramme à barres
-        plt.bar(df[column_name_1], df[column_name_2])
-        plt.xlabel(column_name_1)
-        plt.ylabel(column_name_2)
+        plt.bar(df[col1], df[col2])
+        plt.xlabel(col1)
+        plt.ylabel(col2)
         plt.title('Bar Plot')
-    elif chart_type == 'histogram':
+    elif type_chart == 'histogram':
         # Exemple : Créer un histogramme
-        plt.hist(df[column_name_1])
-        plt.xlabel(column_name_1)
+        plt.hist(df[col1])
+        plt.xlabel(col1)
         plt.ylabel('Fréquence')
         plt.title('Histogramme')
 
@@ -48,53 +47,29 @@ def excel(request):
         form = FileUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            # Utilisez 'file' comme nom de champ pour accéder au fichier dans le formulaire
-            fichier = request.FILES['file']  # Mettez à jour cette ligne
+            fichier = request.FILES['file']
 
             if fichier.name.endswith(('.xls', '.xlsx')):
                 try:
                     data = pd.read_excel(fichier)
                     df = pd.DataFrame(data)
-
-                    # Créez une liste de choix de colonnes basée sur les colonnes du DataFrame
                     columns_choices = [(col, col) for col in df.columns]
+                    df_json = df.to_json()
+                    request.session['df_json']=df_json
 
-                    # Initialisez le formulaire avec les choix de colonnes
-                    visualization_form = VisualizationForm()
-                    visualization_form.fields['column_name_1'].choices = columns_choices
-                    visualization_form.fields['column_name_2'].choices = columns_choices
+                    
 
-                    if visualization_form.is_valid():
-                        chart_type = visualization_form.cleaned_data['chart_type']
-                        column_name_1 = visualization_form.cleaned_data['column_name_1']
-                        column_name_2 = visualization_form.cleaned_data['column_name_2']
 
-                        try:
-                            plot_data = generate_chart(df, chart_type, column_name_1, column_name_2)
-                            if plot_data is not None:
-                                return render(
-                                    request,
-                                    'diagramme.html',
-                                    {'form': form, 'visualization_form': visualization_form, 'df': df.to_html(classes='table table-bordered'), 'plot_data': plot_data},
-                                )
-                            else:
-                                return HttpResponse("Type de diagramme non pris en charge.")
-                        except KeyError as e:
-                            error_message = f"Erreur : La colonne spécifiée n'existe pas dans le DataFrame. Colonnes disponibles : {', '.join(df.columns)}"
-                            return render(
-                                request,
-                                'visualiser_data.html',
-                                {'form': form, 'visualization_form': visualization_form, 'error_message': error_message, 'column_names': df.columns},
-                            )
-                    else:
-                        return render(
-                            request,
-                            'visualiser_data.html',
-                            {'form': form, 'visualization_form': visualization_form, 'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
-                        )
+                    return render(
+                        request,
+                        'visualiser_data.html',
+                        {'form': form,  'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
+                    )
+                       
+                    
                 except pd.errors.ParserError as e:
-                    error_message = f"Erreur : Impossible de lire le fichier Excel. Assurez-vous que le fichier est au format Excel valide."
-                    return render(request, 'excel.html', {'form': form, 'error_message': error_message})
+                    e = f"Erreur : Impossible de lire le fichier Excel. Assurez-vous que le fichier est au format Excel valide."
+                    return render(request, 'excel.html', {'form': form, 'error_message': e})
             else:
                 return HttpResponse("Seuls les fichiers Excel (.xls, .xlsx) sont autorisés. Veuillez télécharger un fichier Excel.")
     else:
@@ -105,6 +80,28 @@ def excel(request):
 
 
 def visualiser(request): 
+    return render(request, 'visualiser_data.html')
+
+def visualiser_chart(request): 
+    if request.method == 'POST':
+        col1 = request.POST['col_name1']
+        col2 = request.POST['col_name2']
+        type_chart = request.POST['type_chart']
+        df_json = request.session.get('df_json')
+        
+        # Convertir la chaîne JSON en objet JSON
+        df_json = json.loads(df_json)
+        
+        # Normaliser les données JSON en DataFrame
+        df = pd.json_normalize(df_json)
+        
+        chart = generate_chart(df, type_chart, col1, col2)
+        context = {
+            'chart': chart 
+        }
+        
+        return render(request, 'diagramme.html', {'context': context})  
+        
     return render(request, 'visualiser_data.html')
 
 

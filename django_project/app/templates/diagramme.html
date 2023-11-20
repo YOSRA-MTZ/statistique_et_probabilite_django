@@ -1,4 +1,3 @@
-<!-- Créez un fichier display_chart.html dans le dossier templates -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,12 @@
     <title>Chart Display</title>
 </head>
 <body>
-    <!-- Utilisez la balise img pour afficher l'image du graphe -->
-    <img src="data:image/png;base64,{{ plot_data }}" alt="Chart">
+    {% if chart %}
+        <!-- Si plot_data n'est pas vide, afficher l'image du graphe -->
+        <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+    {% else %}
+        <!-- Si plot_data est vide, afficher un message -->
+        <p>Aucune donnée de diagramme disponible pour l'instant.</p>
+    {% endif %}
 </body>
 </html>
