@@ -104,17 +104,11 @@ def excel(request):
                     columns_choices = [(col, col) for col in df.columns]
                     df_json = df.to_json()
                     request.session['df_json']=df_json
-
-                    
-
-
                     return render(
                         request,
                         'visualiser_data.html',
                         {'form': form,  'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
                     )
-                       
-                    
                 except pd.errors.ParserError as e:
                     e = f"Erreur : Impossible de lire le fichier Excel. Assurez-vous que le fichier est au format Excel valide."
                     return render(request, 'excel.html', {'form': form, 'error_message': e})
