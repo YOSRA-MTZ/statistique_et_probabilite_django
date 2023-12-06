@@ -11,7 +11,11 @@ from io import StringIO, BytesIO
 import base64
 from .forms import FileUploadForm, VisualizationForm
 import json
+import plotly.express as px
 import matplotlib
+import plotly.graph_objs as go
+
+import plotly.io as pio
 matplotlib.use('Agg')
 
 def index(request):
@@ -21,73 +25,66 @@ def index(request):
 def generate_chart(df, type_chart, col1, col2):
     buffer = BytesIO()
 
-    if type_chart == 'bar':
-        plt.bar(df[col1], df[col2])
-        plt.xlabel(col1)
-        plt.ylabel(col2)
-        plt.title('Bar Plot')
+    if type_chart == 'Barplot':
+        fig = px.bar(df, x=col1, y=col2)
+        fig.update_layout(xaxis_title=col1, yaxis_title=col2, title='Bar Plot')
+        return fig.to_json()
 
     elif type_chart == 'histogram':
-        plt.hist(df[col1])
-        plt.xlabel(col1)
-        plt.ylabel('Fréquence')
-        plt.title('Histogramme')
+        fig = px.histogram(df, x=col1)
+        fig.update_layout(xaxis_title=col1, yaxis_title='Count', title='Histogram', barmode='overlay', bargap=0.1)
+        return fig.to_json()
 
     elif type_chart == 'piechart':
-        plt.pie(df[col1], labels=df[col2])
-        plt.title('Pie Chart')
+        value_counts = df[col1].value_counts().reset_index()
+        value_counts.columns = [col1, 'Count']
+        fig = px.pie(value_counts, values='Count', names=col1, title='Pie Chart')
+        return fig.to_json()
 
-    elif type_chart == 'histplot':
-        sns.histplot(df[col1])
-        plt.xlabel(col1)
-        plt.ylabel('Count')
-        plt.title('Histogram Plot')
 
     elif type_chart == 'scatterplot':
-        plt.scatter(df[col1], df[col2])
-        plt.xlabel(col1)
-        plt.ylabel(col2)
-        plt.title('Scatter Plot')
+        fig = px.scatter(df, x=col1, y=col2)
+        fig.update_layout(xaxis_title=col1, yaxis_title=col2, title='Scatter Plot')
+        return fig.to_json()
 
     elif type_chart == 'heatmap':
-        pivot_table = df.pivot_table(index=col1, columns=col2, aggfunc=len)
-        sns.heatmap(pivot_table, cmap='coolwarm')
-        plt.title('Heatmap')
+        df_encoded = df.copy()
+        for column in df_encoded.columns:
+            if df_encoded[column].dtype == 'object':
+                df_encoded[column], _ = pd.factorize(df_encoded[column])
+        fig = px.imshow(df_encoded.corr(), color_continuous_scale='Viridis')
+        fig.update_layout(title='Heatmap')
+        return fig.to_json()
 
     elif type_chart == 'lineplot':
-        plt.plot(df[col1], df[col2]) 
-        plt.xlabel(col1)
-        plt.ylabel(col2)
-        plt.title('Line Plot')
+        fig = px.line(df, x=col1, y=col2)
+        fig.update_layout(xaxis_title=col1, yaxis_title=col2, title='Line Plot')
+        return fig.to_json()
 
+        
     elif type_chart == 'boxplot':
-        sns.boxplot(x=df[col1], y=df[col2])
-        plt.xlabel(col1)
-        plt.ylabel(col2)
-        plt.title('Box Plot')
+        fig = px.box(df, x=col1)
+        fig.update_layout(title='Box Plot')
+        return fig.to_json()
+        
 
     elif type_chart == 'violinplot':
-        sns.violinplot(x=df[col1], y=df[col2])
-        plt.xlabel(col1)
-        plt.ylabel(col2)
-        plt.title('Violin Plot')
-        
+        fig = px.violin(df, y=col1, box=True)
+        fig.update_layout(yaxis_title=col1, title='Violin Plot')
+        return fig.to_json()
+
     elif type_chart == 'kdeplot':
-        # Vérifier si la colonne contient des données numériques
-        if pd.api.types.is_numeric_dtype(df[col1]):
-            sns.kdeplot(df[col1], shade=True)
-            plt.xlabel(col1)
-            plt.title('KDE Plot')
-        else:
-           
-            plt.text(0.5, 0.5, "Cette colonne ne contient pas de données numériques", ha='center', va='center', fontsize=12)
-            plt.axis('off')  
+        fig = px.histogram(df, x=col1, marginal='rug', nbins=50, 
+                               template='plotly'
+                               )
+        fig.update_layout( title='KdePlot')
+            # Convertir la figure en JSON
+        fig_json = fig.to_json()
 
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    plt.close()
-
-    return buffer
+            # Retourner la représentation JSON de la figure
+        return fig_json
+    else:
+        return '{"error": "Type de graphique non pris en charge"}'
 
 
 def excel(request):
@@ -123,7 +120,6 @@ def excel(request):
 
 def visualiser(request): 
     return render(request, 'visualiser_data.html')
-
 def visualiser_chart(request): 
     if request.method == 'POST':
         col1 = request.POST['col_name1']
@@ -134,17 +130,19 @@ def visualiser_chart(request):
         df_json_io = StringIO(df_json)
         df = pd.read_json(df_json_io)
         
+        # Vérifier si la colonne choisie est une chaîne de caractères
+        if pd.api.types.is_string_dtype(df[col1]) and type_chart in ['kdeplot', 'violinplot', 'boxplot']:
+            error_message = "La colonne choisie est de type 'string', veuillez choisir une autre colonne."
+            return render(request, 'diagramme.html', {'error_message': error_message})
+        elif type_chart=="Nothing":
+            error_message = "Veuillez sélectionner un diagramme à afficher"
+            return render(request, 'diagramme.html', {'error_message': error_message})
+        # Si ce n'est pas une chaîne de caractères ou pour d'autres types de graphiques,
+        # générer le graphique normalement
         chart = generate_chart(df, type_chart, col1, col2)
-        plot_data = base64.b64encode(chart.getvalue()).decode('utf-8')
-        
-        context = {
-            'chart': plot_data 
-        }
-        
-        return render(request, 'diagramme.html', context)  
+        return render(request, 'diagramme.html', {'chart': chart})
     
     return render(request, 'visualiser_data.html')
-
 
 def diagramme(request):
     return render(request, 'diagramme.html')

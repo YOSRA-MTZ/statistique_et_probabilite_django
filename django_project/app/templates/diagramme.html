@@ -1,43 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ... -->
     <title>Chart Display</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .card {
-            width: 70%;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* Pour gérer le débordement du contenu */
-        }
-
-        img {
-            display: block;
-            margin: 0 auto; /* Pour centrer l'image à l'intérieur de la carte */
-            max-width: 100%; /* Pour s'assurer que l'image ne dépasse pas la largeur de la carte */
-        }
-    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
+<style>
+    .error-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #f5c6cb;
+        margin: 20px 0;
+    }
+</style>
+
 <body>
     {% if chart %}
         <div class="card">
-            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+            <div id="plotly-chart"></div>
         </div>
+        <script>
+            var chartData = '{{ chart|safe }}'; // Encadrer chart avec des apostrophes simples
+            Plotly.newPlot('plotly-chart', JSON.parse(chartData), {});
+        </script>
     {% else %}
-        <!-- Si plot_data est vide, afficher un message -->
-        <p>Aucune donnée de diagramme disponible pour l'instant.</p>
+        {% if error_message %}
+        <div class="error-message">
+            <p>{{ error_message }}</p>
+        </div>
+        {% else %}
+            <p>Aucune donnée de diagramme disponible pour l'instant.</p>
+        {% endif %}
     {% endif %}
 </body>
 </html>

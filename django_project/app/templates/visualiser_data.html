@@ -8,19 +8,23 @@
     {% block styles %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/visualiser.css' %}">
         <link href="{% static 'webfonts/all.min.css' %}" rel="stylesheet">
+
     {% endblock %}
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <body>
+   
     <div class="card1">
         <h2>Formulaire d'Upload Excel</h2>
         <form method="post" action="{% url 'visualiser_chart' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <select id="type_chart" name="type_chart">
-                <option value="bar">Barplot</option>
+                <option value="Nothing">-</option>
+                <option value="Barplot">Barplot</option>
                 <option value="histogram">histogram</option>
                 <option value="piechart">piechart</option>
-                <option value="histplot">Histplot</option>
+                
                 <option value="scatterplot">Scatterplot</option>
                 <option value="heatmap">heatmap</option>
                 <option value="lineplot">lineplot</option>
@@ -29,15 +33,16 @@
                 <option value="kdeplot">kdeplot</option>
             </select>
             <select id="col_name1" name="col_name1">
-            {% for col in column_names %}
-                <option value="{{ col }}">{{ col }}</option>
-            {% endfor %}    
+                {% for col in column_names %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
             </select>
             <select id="col_name2" name="col_name2">
-            {% for col in column_names %}
-                <option value="{{ col }}">{{ col }}</option>
-            {% endfor %}    
+                {% for col in column_names %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
             </select>
+            
             <button type="submit">Envoyer</button>
         </form>
     </div>
@@ -53,4 +58,28 @@
         {% endif %}
     </div>
 </body>
+<script>
+    $(document).ready(function(){
+        // Cacher les listes déroulantes au chargement initial de la page
+        $('#col_name1, #col_name2').hide();
+    
+        $('#type_chart').change(function(){
+            var selected_chart = $(this).val();
+            console.log(selected_chart);  // Vérifier la valeur sélectionnée dans la console
+            
+            if (selected_chart === 'scatterplot' || selected_chart === 'lineplot' || selected_chart === 'Barplot') {
+                $('#col_name1, #col_name2').show();  
+            } else if (selected_chart === 'kdeplot' || selected_chart === 'histogram' || selected_chart === 'piechart' || selected_chart === 'boxplot' || selected_chart === 'violinplot') {
+                $('#col_name1').show();  // Afficher la première liste déroulante
+                $('#col_name2').hide();  // Cacher la deuxième liste déroulante
+            } else if (selected_chart === 'heatmap' || selected_chart === 'Nothing') {
+                // Si aucune sélection n'est faite ou si la sélection est par défaut
+                $('#col_name1, #col_name2').hide();  // Cacher les deux listes déroulantes
+            }
+        });
+    });
+    
+    
+    
+</script>
 </html>
