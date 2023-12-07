@@ -56,7 +56,8 @@ def generate_chart(df, type_chart, col1, col2):
         return fig.to_json()
 
     elif type_chart == 'lineplot':
-        fig = px.line(df, x=col1, y=col2)
+       
+        fig = px.line(df, x=col1, y=col2,markers=True)
         fig.update_layout(xaxis_title=col1, yaxis_title=col2, title='Line Plot')
         return fig.to_json()
 
