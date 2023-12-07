@@ -144,7 +144,6 @@ def visualiser_chart(request):
 def diagramme(request):
     return render(request, 'diagramme.html')
 
-
 def text(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
@@ -154,9 +153,17 @@ def text(request):
             # Check if the file is a txt file
             if fichier.name.endswith('.txt'):
                 # Process the txt file
-                data = pd.read_csv(fichier, sep='\t') 
+                data = pd.read_csv(fichier)
+
                 df = pd.DataFrame(data)
-                return render(request, 'visualiser_data.html', {'df': df.to_html(classes='table table-bordered')})
+                columns_choices = [(col, col) for col in df.columns]
+                df_json = df.to_json()
+                request.session['df_json'] = df_json
+                return render(
+                        request,
+                        'visualiser_data.html',
+                        {'form': form,  'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
+                )    
             else:
                 return HttpResponse("Seuls les fichiers text sont autorisés. Veuillez télécharger un fichier txt.")
     else:
@@ -170,13 +177,20 @@ def csv(request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             fichier = request.FILES['file']
-            
-            # Check if the file is a CSV file
             if fichier.name.endswith('.csv'):
-                # Process the CSV file
-                df = pd.read_csv(fichier)
-                # You can now use 'df' for further processing or display
-                return render(request, 'csv.html', {'df': df})
+                # Traitez le fichier CSV
+                data = pd.read_csv(fichier)
+                df = pd.DataFrame(data)
+                columns_choices = [(col, col) for col in df.columns]
+                df_json = df.to_json()
+                request.session['df_json'] = df_json
+
+                # Vous pouvez maintenant utiliser 'df' pour d'autres traitements ou l'afficher
+                return render(
+                        request,
+                        'visualiser_data.html',
+                        {'form': form,  'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
+                )
             else:
                 return HttpResponse("Seuls les fichiers CSV sont autorisés. Veuillez télécharger un fichier CSV.")
     else:
@@ -186,25 +200,33 @@ def csv(request):
 
 def url(request):
     if request.method == 'POST':
-        url = request.POST.get('url', '')
-        
-        # Check if the URL is not empty
-        if url:
-            try:
-                # Fetch data from the URL (you may need additional logic based on your data source)
-                response = requests.get(url)
-                
-                # Check if the request was successful (status code 200)
-                if response.status_code == 200:
-                    # Process the data, for example, display the first 100 characters
-                    data = response.text[:100]
-                    return render(request, 'url_result.html', {'data': data})
-                else:
-                    return HttpResponse(f"Failed to fetch data from URL. Status Code: {response.status_code}")
-            except Exception as e:
-                return HttpResponse(f"An error occurred: {str(e)}")
-        else:
-            return HttpResponse("Please provide a valid URL.")
-    
-    return render(request, 'url.html')
+        lien = request.POST.get('url', '')
 
+        # Vérifie si le lien n'est pas vide
+        if lien:
+            try:
+                # Récupère les données depuis le lien
+                response = requests.get(lien)
+
+                # Vérifie si la requête a été réussie (code d'état 200)
+                if response.status_code == 200:
+                    # Charge les données dans un DataFrame pandas
+                    df = pd.read_csv(response.text.splitlines())
+                    columns_choices = [(col, col) for col in df.columns]
+                    df_json = df.to_json()
+                    request.session['df_json'] = df_json
+
+                    # Renvoie les données pour l'affichage
+                    return render(
+                        request,
+                        'visualiser_data.html',
+                        {'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
+                    )
+                else:
+                    return HttpResponse(f"Impossible de récupérer les données depuis le lien. Code d'état : {response.status_code}")
+            except Exception as e:
+                return HttpResponse(f"Une erreur s'est produite : {str(e)}")
+        else:
+            return HttpResponse("Veuillez fournir un lien valide.")
+
+    return render(request, 'url.html')

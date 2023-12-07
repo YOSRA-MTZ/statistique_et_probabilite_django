@@ -68,8 +68,9 @@
                         </a>
                     </div>
                     
-                    <form method="post" enctype="multipart/form-data" id="fileUploadForm"> 
-                        <div class="centered">
+                    <form method="post" enctype="multipart/form-data"
+                    action="{% url 'text' %}" id="fileUploadForm">
+                    {% csrf_token %}                        <div class="centered">
                             <input type="file" name="file" id="fileInput" accept=".txt">
                         </div>
                         <div class="centered-container">
