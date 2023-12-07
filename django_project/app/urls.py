@@ -3,7 +3,7 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [    
-               path('image/', views.image, name='image'),
+              
 
    path('', views.index, name='app'),
    path('excel/', views.excel, name='excel'), 

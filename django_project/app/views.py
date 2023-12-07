@@ -19,7 +19,6 @@ import plotly.io as pio
 matplotlib.use('Agg')
 
 def index(request):
-   
     return render(request, 'index.html')
 # views.py
 def generate_chart(df, type_chart, col1, col2):
@@ -116,8 +115,6 @@ def excel(request):
 
     return render(request, 'excel.html', {'form': form})
 
-
-
 def visualiser(request): 
     return render(request, 'visualiser_data.html')
 def visualiser_chart(request): 
@@ -211,60 +208,3 @@ def url(request):
     
     return render(request, 'url.html')
 
-
-def image(request):
-    if request.method == 'POST':
-        image_file = request.FILES.get('image')
-
-        if image_file:
-            try:
-                # Process the image (calculate color histogram)
-                img_array, histogram_data = process_image(image_file)
-
-                # Create a histogram plot
-                fig, axes = plt.subplots(1, 2, figsize=(12, 3))
-
-                # Display the image
-                axes[0].imshow(img_array)
-                axes[0].set_title('Image')
-
-                # Plot the color histogram
-                sns.histplot(img_array.ravel(), color='blue', bins=50, ax=axes[1])
-                axes[1].set_title('Histogram of the Image')
-                plt.tight_layout()
-
-                # Save the plot to a BytesIO object
-                buffer = BytesIO()
-                plt.savefig(buffer, format='png')
-                buffer.seek(0)
-                plt.close()
-
-                # Convert the plot to a base64-encoded string
-                plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-                return render(request, 'image_result.html', {'plot_data': plot_data})
-
-            except Exception as e:
-                return render(request, 'image_result.html', {'error_message': f"An error occurred: {str(e)}"})
-
-    return render(request, 'image.html')
-
-def process_image(image_file):
-    img = Image.open(image_file)
-
-    # Convert the image to a NumPy array
-    img_array = np.array(img)
-
-    # Calculate the color histogram using NumPy
-    red_hist = np.histogram(img_array[:,:,0].ravel(), bins=256, range=[0,256])
-    green_hist = np.histogram(img_array[:,:,1].ravel(), bins=256, range=[0,256])
-    blue_hist = np.histogram(img_array[:,:,2].ravel(), bins=256, range=[0,256])
-
-    # Normalize the histograms
-    red_hist = red_hist[0] / red_hist[0].sum()
-    green_hist = green_hist[0] / green_hist[0].sum()
-    blue_hist = blue_hist[0] / blue_hist[0].sum()
-
-    histogram_data = {'red': red_hist.tolist(), 'green': green_hist.tolist(), 'blue': blue_hist.tolist()}
-
-    return img_array, histogram_data

@@ -29,7 +29,7 @@
 
             <div class="tools__container">
 
-                <div class="tools__item">
+                <div class="tools__item" style="margin-left:125px;">
                     <a href="{% url 'excel'%}" title="Excel">
                         <div class="tools__item__icon">
                             <img src="../static/img/excel.png" width="40"
@@ -74,18 +74,7 @@
 
                     </a>
                 </div>
-                <div class="tools__item">
-                    <a href="{% url 'image'%}"
-                        title="image">
-                        <div class="tools__item__icon">
-                            <img src="../static/img/autre.png" alt="I.Y"
-                                width="40" height="40" viewBox="0 0 60 60" />
-
-                        </div>
-                        <h3>Image</h3>
-
-                    </a>
-                </div>
+               
 
                 <form method="post" enctype="multipart/form-data" id="fileUploadForm"> 
                     <div class="centered">
