@@ -74,17 +74,21 @@ def generate_chart(df, type_chart, col1, col2):
         return fig.to_json()
 
     elif type_chart == 'kdeplot':
-        fig = px.histogram(df, x=col1, marginal='rug', nbins=50, 
-                               template='plotly'
-                               )
-        fig.update_layout( title='KdePlot')
-            # Convertir la figure en JSON
+        fig = px.density_contour(df, x=col1)
+
+        # You can customize the appearance of the KDE plot here if needed
+        # fig.update_traces(contours_coloring="fill", contours_showlabels=True)
+        fig.update_traces(contours_coloring="lines")
+
+        # Convert the figure to JSON
         fig_json = fig.to_json()
 
-            # Retourner la représentation JSON de la figure
+        # Return the JSON representation of the figure
         return fig_json
-    else:
-        return '{"error": "Type de graphique non pris en charge"}'
+
+
+          
+    
 
 
 def excel(request):
