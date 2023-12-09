@@ -13,7 +13,7 @@ urlpatterns = [
    path('visualiser/', views.visualiser, name='visualiser'),
    path('visualiserChart/', views.visualiser_chart, name='visualiser_chart'),
    path('diagramme/', views.diagramme, name='diagramme'),
-
+   path('parcourir/', views.parcourir_chart, name='parcourir_chart'),
    # path('upload-file/', views.upload_file, name='upload_file'),
 
    

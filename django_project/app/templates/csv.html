@@ -76,34 +76,34 @@
                 </div>
                
 
-                <form method="post" enctype="multipart/form-data"
-                action="{% url 'csv' %}" id="fileUploadForm">
-                {% csrf_token %}                   
-                 <div class="centered">
-                        <input type="file" name="file" id="fileInput" accept=".csv">
+                
+                <form method="post" enctype="multipart/form-data" action="{% url 'csv' %}" id="fileUploadForm">
+                    {% csrf_token %}
+                    <div class="centered">
+                        <input type="file" name="file" id="id_file" accept=".csv">
                     </div>
+                
                     <div class="centered-container">
-                        {% if error_message %}
-                            <p>{{ error_message }}</p>
-                        {% endif %}
-                        <button class="a" id="visualiserButton" style="display: none;">Visualiser</button>
-                        <button id="parcourirButton" style="display: none;">Parcourir les données</button>
+                        <button type="submit" id="visualiserButton" style="display: none;">Visualiser</button>
+                        <button type="button" id="parcourirButton" style="display: none;">Parcourir les données</button>
                     </div>
                 </form>
-            
+                
                 <script>
-                    document.getElementById('fileInput').addEventListener('change', function () {
-                        // Show the buttons when a file is selected
+                    document.getElementById('id_file').addEventListener('change', function () {
+                        // Afficher les boutons lorsque le fichier est sélectionné
                         document.getElementById('visualiserButton').style.display = 'inline-block';
                         document.getElementById('parcourirButton').style.display = 'inline-block';
                     });
-            
+                
                     document.getElementById('visualiserButton').addEventListener('click', function () {
-                       
+                        // Ajoutez la logique correspondant à ce bouton si nécessaire
+                        window.location.href = "{% url 'visualiser_chart' %}";
                     });
-            
+                
                     document.getElementById('parcourirButton').addEventListener('click', function () {
-                        
+                        // Rediriger vers parcourir.html
+                        window.location.href = "{% url 'parcourir_chart' %}";
                     });
                 </script>
                 <style>

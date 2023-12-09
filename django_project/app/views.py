@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, HttpResponse
 import pandas as pd  # Note the corrected import statement
 import requests
-from PIL import Image
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -85,10 +85,6 @@ def generate_chart(df, type_chart, col1, col2):
 
         # Return the JSON representation of the figure
         return fig_json
-
-
-          
-    
 
 
 def excel(request):
@@ -235,3 +231,32 @@ def url(request):
             return HttpResponse("Veuillez fournir un lien valide.")
 
     return render(request, 'url.html')
+def parcourir_chart(request):
+    df = None
+    columns_choices = None
+
+    if 'df_json' in request.session:
+        df_json = request.session['df_json']
+        df = pd.read_json(StringIO(df_json))
+        columns_choices = [(col) for col in df.columns]
+
+    if request.method == 'POST':
+        parcourir_chart_type = request.POST.get('parcourir_chart')
+        col_name1 = request.POST.get('col_name1')
+        row_numb = request.POST.get('RowNumb')
+
+        if parcourir_chart_type == 'FindElem' and df is not None:
+            # Logique pour rechercher l'élément
+            try:
+                row_numb = int(row_numb)
+                max_row = df.shape[0] - 1  # La taille maximale du DataFrame
+                row_numb = min(row_numb, max_row)  # Assurez-vous que row_numb ne dépasse pas la taille du DataFrame
+                resultats_recherche = df.at[row_numb, col_name1]
+                contexte = {'resultat': resultats_recherche, 'column_names': columns_choices, 'df': df.to_html(classes='table table-bordered'), 'max_row': max_row}
+                return render(request, 'parcourir.html', contexte)
+            except (ValueError, KeyError, IndexError):
+                pass
+
+    # Si la méthode n'est pas POST, ou si aucune recherche n'est effectuée, affichez simplement la page avec le DataFrame actuel
+    contexte = {'df': df.to_html(classes='table table-bordered') if df is not None else None, 'column_names': columns_choices}
+    return render(request, 'parcourir.html', contexte)
