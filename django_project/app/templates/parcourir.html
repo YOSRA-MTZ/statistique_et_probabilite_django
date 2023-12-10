@@ -51,7 +51,7 @@
             
 
             {% for col in column_names %}
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check-inline" id="colonne">
                     <input
                         class="form-check-input"
                         type="checkbox"
@@ -95,31 +95,34 @@
     <script>
         $(document).ready(function(){
             // Cacher les listes déroulantes au chargement initial de la page
-            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb').hide();
+            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
 
             $('#parcourir_chart').change(function(){
                 var selected_chart = $(this).val();
                 console.log(selected_chart);  // Vérifier la valeur sélectionnée dans la console
                 
                 if (selected_chart === 'FindElem') {
+                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
                     $('#col_name1, #RowNumb').show(); 
+                    
 
                 } else if (selected_chart === 'Slicing') {
-                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb').hide();
+                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
                     $('#parcourir_rows').show();
 
                     $('#parcourir_rows').change(function(){
                         var selected_chart_rows = $(this).val();
                         console.log(selected_chart_rows); 
                         if (selected_chart_rows === 'NbrOfRowsTop') {
-                            $('#col_name1, #RowNumb ,#Head, #Tail ,#FromRowNumb,#ToRowNumb').hide();
-                            $('#Head').show();
+                            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
+                            $('#Head ,#colonne').show();
+                            
                         } else if (selected_chart_rows === 'NbrOfRowsBottom') {
-                            $('#col_name1, #RowNumb ,#Head, #Tail ,#FromRowNumb,#ToRowNumb').hide();
-                            $('#Tail').show();
+                            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
+                            $('#Tail , #colonne').show();
                         }else if (selected_chart_rows === 'FromRowToRow') {
-                            $('#col_name1, #RowNumb ,#Head, #Tail ,#FromRowNumb,#ToRowNumb').hide();
-                            $('#FromRowNumb,#ToRowNumb').show();
+                            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
+                            $('#FromRowNumb,#ToRowNumb , #colonne').show();
                         }
                         
                     });
