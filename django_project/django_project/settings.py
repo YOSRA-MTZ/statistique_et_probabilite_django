@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     
      # My Apps
     'app.apps.AppConfig',
-    'lois.apps.LoisConfig',
+    
 ]
 
 MIDDLEWARE = [

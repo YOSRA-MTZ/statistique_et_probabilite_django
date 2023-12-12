@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, HttpResponse
 import pandas as pd  # Note the corrected import statement
 import requests
-
+from .forms import BinomialForm
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -14,8 +14,11 @@ import json
 import plotly.express as px
 import matplotlib
 import plotly.graph_objs as go
-
+from scipy.stats import binom
+from django.http import JsonResponse
 import plotly.io as pio
+from .forms import BernoulliForm 
+from scipy.stats import bernoulli
 matplotlib.use('Agg')
 
 def index(request):
@@ -231,6 +234,9 @@ def url(request):
             return HttpResponse("Veuillez fournir un lien valide.")
 
     return render(request, 'url.html')
+
+
+
 def parcourir_chart(request):
     df = None
     columns_choices = None
@@ -257,6 +263,72 @@ def parcourir_chart(request):
             except (ValueError, KeyError, IndexError):
                 pass
 
+        # Nouvelle logique pour le parcours spécifique
+        parcourir_rows_type = request.POST.get('parcourir_rows')
+
+        if parcourir_rows_type == 'NbrOfRowsTop':
+            nb_rows_top = int(request.POST.get('Head'))
+            df = df.head(nb_rows_top)
+        elif parcourir_rows_type == 'NbrOfRowsBottom':
+            nb_rows_bottom = int(request.POST.get('Tail'))
+            df = df.tail(nb_rows_bottom)
+        elif parcourir_rows_type == 'FromRowToRow':
+            from_row = int(request.POST.get('FromRowNumb'))
+            to_row = int(request.POST.get('ToRowNumb'))
+            df = df.loc[from_row:to_row]
+
+        # Récupération des colonnes sélectionnées
+        selected_columns = request.POST.getlist('selected_columns')
+        if selected_columns:
+            df = df[selected_columns]
+
     # Si la méthode n'est pas POST, ou si aucune recherche n'est effectuée, affichez simplement la page avec le DataFrame actuel
     contexte = {'df': df.to_html(classes='table table-bordered') if df is not None else None, 'column_names': columns_choices}
     return render(request, 'parcourir.html', contexte)
+
+#//////////////////////////////// LOIS ////////////////////////////////////////////////////////////////
+def Binomiale(request):
+    if request.method == 'POST':
+        form = BinomialForm(request.POST)
+        if form.is_valid():
+            n = form.cleaned_data['n']
+            p = form.cleaned_data['p']
+
+            # Générer des échantillons de la distribution binomiale
+            data_binomial = binom.rvs(n=n, p=p, loc=0, size=1000)
+
+            # Créer un histogramme interactif avec Plotly Express
+            fig = px.histogram(x=data_binomial, nbins=n+1, title='Distribution Binomiale')
+            fig.update_layout(xaxis_title='Binomial', yaxis_title='Fréquence relative')
+
+            # Convertir la figure en JSON
+            plot_data = fig.to_json()
+
+            return render(request, 'binomiale.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = BinomialForm()
+
+    return render(request, 'binomiale.html', {'form': form})
+
+
+def Bernoulli(request):
+    if request.method == 'POST':
+        form = BernoulliForm(request.POST)
+        if form.is_valid():
+            p = form.cleaned_data['p']
+
+            # Générer des échantillons de la distribution de Bernoulli
+            data_bernoulli = bernoulli.rvs(p, size=1000)
+
+            # Créer un histogramme interactif avec Plotly Express
+            fig = px.histogram(x=data_bernoulli, nbins=2, title='Distribution de Bernoulli')
+            fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative')
+
+            # Convertir la figure en JSON
+            plot_data = fig.to_json()
+
+            return render(request, 'bernoulli.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = BernoulliForm()
+
+    return render(request, 'bernoulli.html', {'form': form})

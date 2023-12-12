@@ -14,7 +14,7 @@ urlpatterns = [
    path('visualiserChart/', views.visualiser_chart, name='visualiser_chart'),
    path('diagramme/', views.diagramme, name='diagramme'),
    path('parcourir/', views.parcourir_chart, name='parcourir_chart'),
-   # path('upload-file/', views.upload_file, name='upload_file'),
-
+   path('binomiale/', views.Binomiale, name='Binomiale'),
+   path('bernoulli/', views.Bernoulli, name='Bernoulli'),
    
 ]
