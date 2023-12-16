@@ -207,38 +207,7 @@ def csv(request):
 
     return render(request, 'csv.html', {'form': form})
 
-def url(request):
-    if request.method == 'POST':
-        lien = request.POST.get('url', '')
 
-        # Vérifie si le lien n'est pas vide
-        if lien:
-            try:
-                # Récupère les données depuis le lien
-                response = requests.get(lien)
-
-                # Vérifie si la requête a été réussie (code d'état 200)
-                if response.status_code == 200:
-                    # Charge les données dans un DataFrame pandas
-                    df = pd.read_csv(response.text.splitlines())
-                    columns_choices = [(col, col) for col in df.columns]
-                    df_json = df.to_json()
-                    request.session['df_json'] = df_json
-
-                    # Renvoie les données pour l'affichage
-                    return render(
-                        request,
-                        'visualiser_data.html',
-                        {'df': df.to_html(classes='table table-bordered'), 'column_names': df.columns},
-                    )
-                else:
-                    return HttpResponse(f"Impossible de récupérer les données depuis le lien. Code d'état : {response.status_code}")
-            except Exception as e:
-                return HttpResponse(f"Une erreur s'est produite : {str(e)}")
-        else:
-            return HttpResponse("Veuillez fournir un lien valide.")
-
-    return render(request, 'url.html')
 
 
 

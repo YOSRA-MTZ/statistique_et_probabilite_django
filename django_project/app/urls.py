@@ -9,7 +9,7 @@ urlpatterns = [
    path('excel/', views.excel, name='excel'), 
    path('CSV/', views.csv, name='csv'),
    path('text/', views.text, name='text'),
-   path('url/', views.url, name='url'),
+  
    path('visualiser/', views.visualiser, name='visualiser'),
    path('visualiserChart/', views.visualiser_chart, name='visualiser_chart'),
    path('diagramme/', views.diagramme, name='diagramme'),
