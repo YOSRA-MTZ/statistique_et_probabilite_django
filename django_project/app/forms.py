@@ -15,6 +15,22 @@ class BinomialForm(forms.Form):
 
 class BernoulliForm(forms.Form):
     p = forms.FloatField(label='Probabilité de succès', initial=0.5, min_value=0, max_value=1)
+    
+    
+class NormaleForm(forms.Form):
+    mean = forms.FloatField(label='Moyenne')
+    std_dev = forms.FloatField(label='Écart-type')
+    
+
+class PoissonForm(forms.Form):
+    lambda_param = forms.FloatField(label='Paramètre lambda')
+    
+class UniformeForm(forms.Form):
+    a = forms.FloatField(label='Limite inférieure (a)')
+    b = forms.FloatField(label='Limite supérieure (b)')
+
+class ExponentielleForm(forms.Form):
+    beta = forms.FloatField(label='Paramètre beta')
 
 class VisualizationForm(forms.Form):
     CHART_CHOICES = [

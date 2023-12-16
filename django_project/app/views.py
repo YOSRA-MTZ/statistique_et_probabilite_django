@@ -21,6 +21,11 @@ from .forms import BernoulliForm
 from scipy.stats import bernoulli
 matplotlib.use('Agg')
 
+from .forms import NormaleForm 
+from .forms import PoissonForm 
+from .forms import UniformeForm 
+from .forms import ExponentielleForm 
+
 def index(request):
     return render(request, 'index.html')
 # views.py
@@ -316,14 +321,11 @@ def Bernoulli(request):
         form = BernoulliForm(request.POST)
         if form.is_valid():
             p = form.cleaned_data['p']
-
             # Générer des échantillons de la distribution de Bernoulli
             data_bernoulli = bernoulli.rvs(p, size=1000)
-
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_bernoulli, nbins=2, title='Distribution de Bernoulli')
             fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative')
-
             # Convertir la figure en JSON
             plot_data = fig.to_json()
 
@@ -332,3 +334,118 @@ def Bernoulli(request):
         form = BernoulliForm()
 
     return render(request, 'bernoulli.html', {'form': form})
+
+#///////////////////////////a modifier
+
+
+def Normale(request):
+    if request.method == 'POST':
+        form = NormaleForm(request.POST)
+        if form.is_valid():
+            mean = form.cleaned_data['mean']
+            std_dev = form.cleaned_data['std_dev']
+
+            # Générer des échantillons de la distribution normale
+            data_normale = np.random.normal(mean, std_dev, size=1000)
+
+            # Créer un histogramme interactif avec Plotly Express
+            fig = px.histogram(x=data_normale, title='Distribution Normale Continue')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+
+            # Convertir la figure en JSON
+            plot_data = fig.to_json()
+
+            return render(request, 'normale.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = NormaleForm()
+
+    return render(request, 'normale.html', {'form': form})
+
+
+
+def Poisson(request):
+    if request.method == 'POST':
+        form = PoissonForm(request.POST)
+        if form.is_valid():
+            lambda_param = form.cleaned_data['lambda_param']
+
+            # Générer des échantillons de la distribution de Poisson
+            data_poisson = np.random.poisson(lambda_param, size=1000)
+
+            # Créer un histogramme interactif avec Plotly Express
+            fig = px.histogram(x=data_poisson, title='Distribution de Poisson')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+
+            # Convertir la figure en JSON
+            plot_data = fig.to_json()
+
+            return render(request, 'poisson.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = PoissonForm()
+
+    return render(request, 'poisson.html', {'form': form})
+
+
+
+def Uniforme(request):
+    if request.method == 'POST':
+        form = UniformeForm(request.POST)
+        if form.is_valid():
+            a = form.cleaned_data['a']
+            b = form.cleaned_data['b']
+
+            # Générer des échantillons de la distribution uniforme
+            data_uniforme = np.random.uniform(a, b, size=1000)
+
+            # Créer un histogramme interactif avec Plotly Express
+            fig = px.histogram(x=data_uniforme, title='Distribution Uniforme')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+
+            # Convertir la figure en JSON
+            plot_data = fig.to_json()
+
+            return render(request, 'uniforme.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = UniformeForm()
+
+    return render(request, 'uniforme.html', {'form': form})
+
+
+
+def Exponentielle(request):
+    if request.method == 'POST':
+        form = ExponentielleForm(request.POST)
+        if form.is_valid():
+            beta = form.cleaned_data['beta']
+
+            # Générer des échantillons de la distribution exponentielle
+            data_exponentielle = np.random.exponential(scale=beta, size=1000)
+
+            # Créer un histogramme interactif avec Plotly Express
+            fig = px.histogram(x=data_exponentielle, title='Distribution Exponentielle')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+
+            # Convertir la figure en JSON
+            plot_data = fig.to_json()
+
+            return render(request, 'exponentielle.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = ExponentielleForm()
+
+    return render(request, 'exponentielle.html', {'form': form})
+
+def Calcules(request):
+    if request.method == 'POST':
+        form = BernoulliForm(request.POST)
+        if form.is_valid():
+            p = form.cleaned_data['p']
+            data_bernoulli = bernoulli.rvs(p, size=1000)
+            fig = px.histogram(x=data_bernoulli, nbins=2, title='Distribution de Bernoulli')
+            fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative')
+            plot_data = fig.to_json()
+
+            return render(request, 'calcules.html', {'form': form, 'plot_data': plot_data})
+    else:
+        form = BernoulliForm()
+
+    return render(request, 'calcules.html', {'form': form})

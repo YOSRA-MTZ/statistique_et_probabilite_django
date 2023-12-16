@@ -17,4 +17,11 @@ urlpatterns = [
    path('binomiale/', views.Binomiale, name='Binomiale'),
    path('bernoulli/', views.Bernoulli, name='Bernoulli'),
    
+   path('normale/', views.Normale, name='Normale'),
+   
+   path('poisson/', views.Poisson, name='Poisson'),
+   path('uniforme/', views.Uniforme, name='Uniforme'),
+   path('exponentielle/', views.Exponentielle, name='Exponentielle'),
+   path('calcules/', views.Calcules, name='Calcules'),
+   
 ]

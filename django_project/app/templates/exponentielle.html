@@ -1,0 +1,31 @@
+<!-- Dans exponentielle.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponential Distribution</title>
+    <!-- Inclure les liens vers la bibliothèque Plotly (si ce n'est pas déjà fait) -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <!-- Afficher le formulaire -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Afficher le graphique</button>
+    </form>
+
+    <!-- Div pour afficher le graphique Plotly -->
+    <div id="exponentielle-plot"></div>
+
+    <!-- Inclure le script pour afficher le graphique à partir des données JSON -->
+    <script>
+        // Charger les données du plot depuis Django
+        var plotData = {{ plot_data|safe }};
+
+        // Afficher le graphique à l'aide de Plotly
+        Plotly.newPlot('exponentielle-plot', plotData);
+    </script>
+</body>
+</html>
