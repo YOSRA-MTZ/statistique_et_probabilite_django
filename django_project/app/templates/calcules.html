@@ -1,12 +1,40 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcules</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Calculs sur les valeurs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% block styles %}
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'css/calcules.css' %}">
+    <link href="{% static 'webfonts/all.min.css' %}" rel="stylesheet">
+    {% endblock %}
+   
 </head>
 <body>
-    
+    <div class="container">
+        <a href="{% url 'app' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> 
+        </a>
+       
+        <h1>Calculs sur les valeurs</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="valeurs">Liste de valeurs (séparées par des tirets ou des virgules) :</label>
+            <input type="text" id="valeurs" name="valeurs" placeholder="Ex: 10, 20, 30, 40" {% if form.valeurs.value %}value="{{ form.valeurs.value }}"{% endif %}>
+            <input type="submit" value="Calculer">
+        </form>
+        
+        {% if mean is not None %}
+        <div class="results">
+            <h2>Résultats :</h2>
+            <p>Moyenne : {{ mean }}</p>
+            <p>Médiane : {{ median }}</p>
+            <p>Mode : {{ mode }}</p>
+            <p>Variance : {{ variance }}</p>
+            <p>Ecart-type : {{ stdev }}</p>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>

@@ -31,7 +31,8 @@ class UniformeForm(forms.Form):
 
 class ExponentielleForm(forms.Form):
     beta = forms.FloatField(label='Paramètre beta')
-
+class TraitementForm(forms.Form):
+    valeurs = forms.CharField(label='Liste de valeurs', widget=forms.TextInput(attrs={'placeholder': 'Entrez les valeurs séparées par des tirets (-) ou des virgules (,)'}))
 class VisualizationForm(forms.Form):
     CHART_CHOICES = [
         ('histplot', 'Histogramme'),

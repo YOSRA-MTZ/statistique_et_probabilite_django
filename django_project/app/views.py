@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import StringIO, BytesIO
 import base64
-from .forms import FileUploadForm, VisualizationForm
+from .forms import FileUploadForm,ExponentielleForm,TraitementForm
 import json
 import plotly.express as px
 import matplotlib
@@ -20,11 +20,11 @@ import plotly.io as pio
 from .forms import BernoulliForm 
 from scipy.stats import bernoulli
 matplotlib.use('Agg')
-
+from statistics import mean, median, mode, variance, stdev
 from .forms import NormaleForm 
 from .forms import PoissonForm 
 from .forms import UniformeForm 
-from .forms import ExponentielleForm 
+
 
 def index(request):
     return render(request, 'index.html')
@@ -273,7 +273,7 @@ def Binomiale(request):
 
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_binomial, nbins=n+1, title='Distribution Binomiale')
-            fig.update_layout(xaxis_title='Binomial', yaxis_title='Fréquence relative')
+            fig.update_layout(xaxis_title='Binomial', yaxis_title='Fréquence relative',bargap=0.2)
 
             # Convertir la figure en JSON
             plot_data = fig.to_json()
@@ -294,7 +294,7 @@ def Bernoulli(request):
             data_bernoulli = bernoulli.rvs(p, size=1000)
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_bernoulli, nbins=2, title='Distribution de Bernoulli')
-            fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative')
+            fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative',bargap=0.2)
             # Convertir la figure en JSON
             plot_data = fig.to_json()
 
@@ -304,7 +304,7 @@ def Bernoulli(request):
 
     return render(request, 'bernoulli.html', {'form': form})
 
-#///////////////////////////a modifier
+#///////////////////////////
 
 
 def Normale(request):
@@ -319,7 +319,7 @@ def Normale(request):
 
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_normale, title='Distribution Normale Continue')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
 
             # Convertir la figure en JSON
             plot_data = fig.to_json()
@@ -343,7 +343,7 @@ def Poisson(request):
 
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_poisson, title='Distribution de Poisson')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
 
             # Convertir la figure en JSON
             plot_data = fig.to_json()
@@ -368,7 +368,7 @@ def Uniforme(request):
 
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_uniforme, title='Distribution Uniforme')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
 
             # Convertir la figure en JSON
             plot_data = fig.to_json()
@@ -392,7 +392,7 @@ def Exponentielle(request):
 
             # Créer un histogramme interactif avec Plotly Express
             fig = px.histogram(x=data_exponentielle, title='Distribution Exponentielle')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative')
+            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
 
             # Convertir la figure en JSON
             plot_data = fig.to_json()
@@ -403,18 +403,36 @@ def Exponentielle(request):
 
     return render(request, 'exponentielle.html', {'form': form})
 
+
+def mode(valeurs):
+    uniques, counts = np.unique(valeurs, return_counts=True)
+    max_count = np.max(counts)
+    modes = uniques[counts == max_count]
+    if max_count == 1:
+        return "Il n'y a pas de mode"
+    else:
+        return modes.tolist()
+
 def Calcules(request):
     if request.method == 'POST':
-        form = BernoulliForm(request.POST)
+        form = TraitementForm(request.POST)
         if form.is_valid():
-            p = form.cleaned_data['p']
-            data_bernoulli = bernoulli.rvs(p, size=1000)
-            fig = px.histogram(x=data_bernoulli, nbins=2, title='Distribution de Bernoulli')
-            fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative')
-            plot_data = fig.to_json()
+            valeurs_input = form.cleaned_data['valeurs']
+            
+            # Traiter les valeurs saisies
+            valeurs = [float(x.strip()) for x in valeurs_input.replace('-', ',').split(',') if x.strip()]
+            
+            # Calcul des statistiques
+            mean_value = np.mean(valeurs)
+            median_value = np.median(valeurs)
+            mode_value = mode(valeurs)
+            variance_value = np.var(valeurs)
+            stdev_value = np.std(valeurs)
 
-            return render(request, 'calcules.html', {'form': form, 'plot_data': plot_data})
+            return render(request, 'calcules.html', {'form': form, 'mean': mean_value,
+                                                     'median': median_value, 'mode': mode_value,
+                                                     'variance': variance_value, 'stdev': stdev_value})
     else:
-        form = BernoulliForm()
+        form = TraitementForm()
 
     return render(request, 'calcules.html', {'form': form})
