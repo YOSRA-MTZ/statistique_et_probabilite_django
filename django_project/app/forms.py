@@ -16,7 +16,6 @@ class BinomialForm(forms.Form):
 class BernoulliForm(forms.Form):
     p = forms.FloatField(label='Probabilité de succès', initial=0.5, min_value=0, max_value=1)
     
-    
 class NormaleForm(forms.Form):
     mean = forms.FloatField(label='Moyenne')
     std_dev = forms.FloatField(label='Écart-type')
@@ -50,7 +49,3 @@ class VisualizationForm(forms.Form):
     chart_type = forms.ChoiceField(choices=CHART_CHOICES, label='Type de Diagramme', required=False)
     column_name_1 = forms.ChoiceField(choices=[], label='Nom de la colonne 1', required=False)
     column_name_2 = forms.ChoiceField(choices=[], label='Nom de la colonne 2', required=False)
-
-   
-
-

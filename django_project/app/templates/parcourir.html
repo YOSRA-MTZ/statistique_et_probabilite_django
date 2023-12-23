@@ -17,7 +17,8 @@
         <h2>Formulaire </h2>
         <form method="post" action="{% url 'parcourir_chart' %}" enctype="multipart/form-data">
             {% csrf_token %}
-
+           
+        
             <select id="parcourir_chart" name="parcourir_chart">
                 <option value="Nothing">-</option>
                 <option value="FindElem">FindElem</option>
@@ -64,14 +65,32 @@
                     </label>
                 </div>
             {% endfor %}
-
-
-
-            <button type="submit">Envoyer</button>
-        </form>
-    </div>
+          
+           
+            <select name="numeric_column" id="numeric_column" placeholder="Colonne Numérique :">
+                {% for col in column_names %}
+                <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+        
+            
+            <select name="condition" id="condition" placeholder="Condition :">
+                <option value=">">Supérieur</option>
+                <option value="<">Inférieur</option>
+                <option value="=">Égal</option>
+            </select>
+        
+            
+            <input type="number" name="value" id="value" placeholder="Valeur :">
+        
+           
+        
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
 
    
+
 
 
     <div class="card">
@@ -96,7 +115,7 @@
     <script>
         $(document).ready(function(){
             // Cacher les listes déroulantes au chargement initial de la page
-            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
+            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb, #ToRowNumb, #group_by_column, #numeric_column, #condition, #value, #colonne').hide();
 
             $('#parcourir_chart').change(function(){
                 var selected_chart = $(this).val();
@@ -129,9 +148,10 @@
                     });
                     
 
-                } else if (selected_chart === 'GroupBy') {
-                    // Si aucune sélection n'est faite ou si la sélection est par défaut
-                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb').hide();  // Cacher les deux listes déroulantes
+                }else if (selected_chart === 'GroupBy') {
+                    // Montrer les champs spécifiques à GroupBy
+                    $(' #numeric_column, #condition, #value').show();
+                    $('#parcourir_rows').hide();
                 }
             });
         });

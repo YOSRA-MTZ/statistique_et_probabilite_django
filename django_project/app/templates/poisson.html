@@ -1,69 +1,40 @@
-<!-- Dans poisson.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poisson Distribution</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        button[type="submit"] {
-            padding: 8px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Poisson Distribution</title>
+        {% block styles %}
+        <link rel="stylesheet" type="text/css"
+            href="{% static 'css/lois.css' %}">
+        {% endblock %}
+        <style>
         #poisson-plot {
             margin: 20px auto;
             width: 80%;
             height: 400px;
             border: 1px solid #ccc;
         }
-
-        
     </style>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-<body>
-    <a href="{% url 'app' %}" class="back-button">
-        <i class="fas fa-arrow-left"></i> Retour
-    </a>
-    <h1>Poisson Distribution</h1>
-    <!-- Afficher le formulaire -->
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Afficher le graphique</button>
-    </form>
-
-    <!-- Div pour afficher le graphique Plotly -->
-    <div id="poisson-plot"></div>
-
-    <!-- Inclure le script pour afficher le graphique à partir des données JSON -->
-    <script>
-        // Charger les données du plot depuis Django
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+    <body>
+        <a href="{% url 'app' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+        <h1>Poisson Distribution</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Afficher le graphique</button>
+        </form>
+        <div id="poisson-plot"></div>
+        <script>
         var plotData = {{ plot_data|safe }};
-
-        // Afficher le graphique à l'aide de Plotly
         Plotly.newPlot('poisson-plot', plotData);
     </script>
-</body>
+    </body>
 </html>

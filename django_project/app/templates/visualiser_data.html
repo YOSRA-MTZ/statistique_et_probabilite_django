@@ -70,11 +70,10 @@
             if (selected_chart === 'scatterplot' || selected_chart === 'lineplot' || selected_chart === 'Barplot') {
                 $('#col_name1, #col_name2').show();  
             } else if (selected_chart === 'kdeplot' || selected_chart === 'histogram' || selected_chart === 'piechart' || selected_chart === 'boxplot' || selected_chart === 'violinplot') {
-                $('#col_name1').show();  // Afficher la première liste déroulante
-                $('#col_name2').hide();  // Cacher la deuxième liste déroulante
+                $('#col_name1').show();  
+                $('#col_name2').hide();  
             } else if (selected_chart === 'heatmap' || selected_chart === 'Nothing') {
-                // Si aucune sélection n'est faite ou si la sélection est par défaut
-                $('#col_name1, #col_name2').hide();  // Cacher les deux listes déroulantes
+                $('#col_name1, #col_name2').hide(); 
             }
         });
     });
