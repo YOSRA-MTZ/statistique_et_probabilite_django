@@ -207,7 +207,7 @@ def parcourir_chart(request):
         df_json = request.session['df_json']
         df = pd.read_json(StringIO(df_json))
         columns_choices = [col for col in df.columns]
-        numeric_columns = [col for col in df.columns if pd.api.types.is_numeric_dtype(df[col])]  # Filtrer les colonnes numériques
+        numeric_columns = [col for col in df.columns ]  # Filtrer les colonnes numériques
         max_row = df.shape[0] - 1
 
     if request.method == 'POST':
@@ -224,11 +224,11 @@ def parcourir_chart(request):
             condition = request.POST.get('condition')
             value = request.POST.get('value')
 
-            if numeric_column and condition and value:
+            if numeric_column and condition and value :
                 try:
                     grouped_df = df.groupby(numeric_column)
                     value = float(value)
-                    if condition == '>':
+                    if condition == '>' and pd.api.types.is_numeric_dtype(df[col]):
                         df = grouped_df.filter(lambda x: x[numeric_column].mean() > value)
                     elif condition == '<':
                         df = grouped_df.filter(lambda x: x[numeric_column].mean() < value)
