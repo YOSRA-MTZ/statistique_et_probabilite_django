@@ -213,7 +213,9 @@ def parcourir_chart(request):
     if request.method == 'POST':
         selected_columns = request.POST.getlist('selected_columns')
         parcourir_chart_type = request.POST.get('parcourir_chart')
-
+        col_name1 = request.POST.get('col_name1')
+        row_numb = request.POST.get('RowNumb')
+        
         if selected_columns:
             df = df[selected_columns]
 

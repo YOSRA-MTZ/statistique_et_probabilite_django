@@ -17,7 +17,14 @@
         <h2>Formulaire </h2>
         <form method="post" action="{% url 'parcourir_chart' %}" enctype="multipart/form-data">
             {% csrf_token %}
-           
+            {% if request.session.error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ request.session.error_message }}
+    </div>
+{% endif %}
+
+
+
         
             <select id="parcourir_chart" name="parcourir_chart">
                 <option value="Nothing">-</option>
@@ -122,27 +129,27 @@
                 console.log(selected_chart);  // Vérifier la valeur sélectionnée dans la console
                 
                 if (selected_chart === 'FindElem') {
-                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
+                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne,#numeric_column, #condition, #value').hide();
                     $('#col_name1, #RowNumb').show(); 
                     
 
                 } else if (selected_chart === 'Slicing') {
-                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
+                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne,#numeric_column, #condition, #value').hide();
                     $('#parcourir_rows').show();
 
                     $('#parcourir_rows').change(function(){
                         var selected_chart_rows = $(this).val();
                         console.log(selected_chart_rows); 
                         if (selected_chart_rows === 'NbrOfRowsTop') {
-                            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
-                            $('#Head ,#colonne').show();
+                            $('#col_name1, #RowNumb  ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne,#numeric_column, #condition, #value').hide();
+                            $('#Head ,#colonne,#parcourir_rows').show();
                             
                         } else if (selected_chart_rows === 'NbrOfRowsBottom') {
-                            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
-                            $('#Tail , #colonne').show();
+                            $('#col_name1, #RowNumb  ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne,#numeric_column, #condition, #value').hide();
+                            $('#Tail , #colonne,#parcourir_rows').show();
                         }else if (selected_chart_rows === 'FromRowToRow') {
-                            $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne').hide();
-                            $('#FromRowNumb,#ToRowNumb , #colonne').show();
+                            $('#col_name1, #RowNumb  ,#Head, #Tail ,#FromRowNumb,#ToRowNumb ,#colonne,#numeric_column, #condition, #value').hide();
+                            $('#FromRowNumb,#ToRowNumb , #colonne,#parcourir_rows').show();
                         }
                         
                     });
@@ -151,7 +158,7 @@
                 }else if (selected_chart === 'GroupBy') {
                     // Montrer les champs spécifiques à GroupBy
                     $(' #numeric_column, #condition, #value').show();
-                    $('#parcourir_rows').hide();
+                    $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb, #ToRowNumb, #group_by_column,#colonne').hide();
                 }
             });
         });
