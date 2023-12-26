@@ -15,17 +15,14 @@
 <body>
     <div class="card1">
         <h2>Formulaire </h2>
-        <form method="post" action="{% url 'parcourir_chart' %}" enctype="multipart/form-data">
+        <form method="post" action="{% url 'parcourir_chart' %}" enctype="multipart/form-data" id="form_id">
             {% csrf_token %}
-            {% if request.session.error_message %}
-    <div class="alert alert-danger" role="alert">
-        {{ request.session.error_message }}
-    </div>
-{% endif %}
-
-
-
-        
+            {% if error_message %}
+            <div class="alert alert-danger" style="position: relative; background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                <i class="fas fa-times" style="position: absolute; top: 10; right: 10px; color: #721c24; font-size: 20px; cursor: pointer;" onclick="this.parentElement.style.display='none';"></i>
+                {{ error_message }}
+            </div>
+        {% endif %}
             <select id="parcourir_chart" name="parcourir_chart">
                 <option value="Nothing">-</option>
                 <option value="FindElem">FindElem</option>
@@ -120,6 +117,7 @@
 
 
     <script>
+        
         $(document).ready(function(){
             // Cacher les listes déroulantes au chargement initial de la page
             $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb, #ToRowNumb, #group_by_column, #numeric_column, #condition, #value, #colonne').hide();
@@ -156,11 +154,23 @@
                     
 
                 }else if (selected_chart === 'GroupBy') {
+                    
                     // Montrer les champs spécifiques à GroupBy
                     $(' #numeric_column, #condition, #value').show();
                     $('#col_name1, #RowNumb ,#parcourir_rows ,#Head, #Tail ,#FromRowNumb, #ToRowNumb, #group_by_column,#colonne').hide();
                 }
             });
+           
+            $('#form_id').submit(function(event) {
+                var selected_chart = $('#parcourir_chart').val();
+                var valueInput = $('#value').val();
+    
+                if (selected_chart === 'GroupBy' && !valueInput) {
+                    alert('Veuillez entrer une valeur.');
+                    event.preventDefault(); // Empêche la soumission du formulaire
+                }
+            });  
+            
         });
         
     </script>

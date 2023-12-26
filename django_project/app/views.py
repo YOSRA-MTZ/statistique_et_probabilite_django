@@ -200,16 +200,15 @@ def csv(request):
 def parcourir_chart(request):
     df = None
     columns_choices = None
-    numeric_columns = None  # Ajout pour stocker les colonnes numériques
+    error_message = ""
     max_row = 0
 
     if 'df_json' in request.session:
         df_json = request.session['df_json']
         df = pd.read_json(StringIO(df_json))
         columns_choices = [col for col in df.columns]
-        numeric_columns = [col for col in df.columns ]  # Filtrer les colonnes numériques
         max_row = df.shape[0] - 1
-
+        
     if request.method == 'POST':
         selected_columns = request.POST.getlist('selected_columns')
         parcourir_chart_type = request.POST.get('parcourir_chart')
@@ -228,20 +227,21 @@ def parcourir_chart(request):
                 try:
                     grouped_df = df.groupby(numeric_column)
                     value = float(value)
-                    if condition == '>' and pd.api.types.is_numeric_dtype(df[col]):
+                    if condition == '>' :
                         df = grouped_df.filter(lambda x: x[numeric_column].mean() > value)
                     elif condition == '<':
                         df = grouped_df.filter(lambda x: x[numeric_column].mean() < value)
                     elif condition == '=':
                         df = grouped_df.filter(lambda x: x[numeric_column].mean() == value)
-                except (ValueError, KeyError):
-                    pass
+                except Exception as e:
+                    error_message = f"Une erreur est survenue : {str(e)}"
 
             # Utilisez numeric_columns pour GroupBy dans le contexte
             contexte = {
                 'df': df.to_html(classes='table table-bordered') if df is not None else None,
-                'column_names': numeric_columns,  # Utilisez numeric_columns ici
-                'max_row': max_row
+                'column_names': columns_choices,
+                'max_row': max_row,
+                'error_message': error_message
             }
             return render(request, 'parcourir.html', contexte)
         if parcourir_chart_type == 'FindElem' and df is not None:
