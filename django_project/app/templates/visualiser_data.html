@@ -16,6 +16,10 @@
 <body>
    
     <div class="card1">
+        <a href="{% url 'app' %}" class="back-button">
+            <i class="fas fa-home"></i> Home
+        </a>
+       
         <h2>Formulaire </h2>
         <form method="post" action="{% url 'visualiser_chart' %}" enctype="multipart/form-data">
             {% csrf_token %}

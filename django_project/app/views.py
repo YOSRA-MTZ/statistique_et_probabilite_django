@@ -21,7 +21,7 @@ from .forms import BernoulliForm
 from scipy.stats import bernoulli
 matplotlib.use('Agg')
 from statistics import mean, median, mode, variance, stdev
-
+import plotly.figure_factory as ff
 
 
 def index(request):
@@ -80,8 +80,18 @@ def generate_chart(df, type_chart, col1, col2):
         return fig.to_json()
 
     elif type_chart == 'kdeplot':
-        fig = px.density_contour(df, x=col1)
-        fig.update_traces(contours_coloring="lines")
+        data_to_plot = df[col1].replace([np.inf, -np.inf], np.nan).dropna()
+
+        group_labels = ['distplot']
+        fig = ff.create_distplot([data_to_plot], group_labels, curve_type='kde')
+
+        # Mise à jour de la disposition (layout)
+        fig.update_layout(
+            title="Kernel Density Estimation (KDE) Plot",
+            yaxis_title="Density",
+            xaxis_title=col1,
+            showlegend=False
+        )
 
         fig_json = fig.to_json()
 

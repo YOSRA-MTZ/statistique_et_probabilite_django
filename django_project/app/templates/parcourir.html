@@ -14,6 +14,9 @@
 
 <body>
     <div class="card1">
+        <a href="{% url 'app' %}" class="back-button">
+            <i class="fas fa-home"></i> Home
+        </a>
         <h2>Formulaire </h2>
         <form method="post" action="{% url 'parcourir_chart' %}" enctype="multipart/form-data" id="form_id">
             {% csrf_token %}
