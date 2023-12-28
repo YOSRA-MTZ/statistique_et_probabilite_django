@@ -43,3 +43,16 @@ L'application fonctionne de la manière suivante :
 1. L'utilisateur accède à la page d'accueil de l'application (`index.html`).
 2. Il peut choisir de visualiser des données à partir d'un fichier Excel, CSV ou texte, ou de générer des distributions de probabilité ou de calculer
 
+##  Installation et prérequis 
+
+- pip install django : Commande utilisée dans Python pour installer le framework Django, un outil robuste pour le développement web.
+- pip install pandas : Commande pour installer la bibliothèque Pandas, souvent utilisée pour la manipulation et l'analyse des données dans Python.
+- pip install requests : Commande pour installer la bibliothèque Requests, qui permet d'envoyer des requêtes HTTP/1.1 de manière simple en Python.
+- pip install matplotlib : Commande pour installer la bibliothèque Matplotlib, utilisée pour la création de graphiques et de visualisations en Python.
+- pip install seaborn : Commande pour installer la bibliothèque Seaborn, qui offre une interface de haut niveau pour créer des graphiques statistiques attrayants en Python.
+- pip install plotly : Commande pour installer la bibliothèque Plotly, permettant la création de graphiques interactifs et dynamiques en Python.
+- pip install openpyxl : Commande pour installer la bibliothèque Openpyxl, utilisée pour la manipulation des fichiers Excel (xlsx) en Python.
+- python -m venv venv : Commande pour créer un environnement virtuel Python nommé "venv", isolant les dépendances d'un projet Python des autres projets.
+- .\venv\Scripts\activate  : Commande pour activer l'environnement virtuel créé précédemment (sous Windows).
+- python manage.py runserver : Commande pour démarrer le serveur de développement dans un projet Django. Il lance l'application web et permet de la visualiser localement dans un navigateur
+
