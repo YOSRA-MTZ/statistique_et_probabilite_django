@@ -1,4 +1,4 @@
- # Statistique et Probabilité avec Django
+# Statistique et Probabilité avec Django
 
 Ce projet est une application web qui permet d'effectuer des opérations statistiques et de probabilité de base. Il est développé en Python à l'aide du framework Django.
 
