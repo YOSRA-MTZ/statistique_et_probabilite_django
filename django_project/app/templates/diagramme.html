@@ -1,20 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- ... -->
     <title>Chart Display</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    {% block styles %}
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'css/diagramme.css' %}">
+
+    {% endblock %}
 </head>
-<style>
-    .error-message {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #f5c6cb;
-        margin: 20px 0;
-    }
-</style>
+
 
 <body>
     {% if chart %}
@@ -22,17 +19,36 @@
             <div id="plotly-chart"></div>
         </div>
         <script>
-            var chartData = '{{ chart|safe }}'; // Encadrer chart avec des apostrophes simples
+            var chartData = '{{ chart|safe }}'; 
             Plotly.newPlot('plotly-chart', JSON.parse(chartData), {});
         </script>
     {% else %}
         {% if error_message %}
-        <div class="error-message">
-            <p>{{ error_message }}</p>
+       
+           
+        <div style=" width: 900px;
+        height: 350px;position: relative;
+        margin: auto;
+        overflow: hidden;">
+        <div id="error-box">
+             
+            <div class="dot"></div>
+            <div class="dot two"></div>
+            <div class="face2">
+              <div class="eye"></div>
+              <div class="eye right"></div>
+              <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">{{ error_message }}</h1></div>
+            
+            <button class="button-box" onclick="history.back()"> <h1 class="red">Try Again</h1></button>
+          </div>
         </div>
         {% else %}
             <p>Aucune donnée de diagramme disponible pour l'instant.</p>
         {% endif %}
     {% endif %}
 </body>
+
 </html>

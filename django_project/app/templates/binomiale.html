@@ -1,41 +1,36 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Binomial Distribution</title>
-        {% block styles %}
-        <link rel="stylesheet" type="text/css"
-            href="{% static 'css/lois.css' %}">
-
-        {% endblock %}
-        <style>
-        #binomial-plot {
-            margin: 20px auto;
-            width: 80%;
-            height: 400px;
-            border: 1px solid #ccc;
-        }
-    </style>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    </head>
-    <body>
-        <a href="{% url 'app' %}" class="back-button">
-            <i class="fas fa-arrow-left"></i> Retour
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binomial Distribution</title>
+    {% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/lois.css' %}">
+    {% endblock %}
+    
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <a href="{% url 'app' %}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+    <h1>Binomial Distribution</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Afficher le graphique</button>
+    </form>
+    {% if plot_data %}
+    <div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+        <a href="data:image/png;base64,{{ plot_data }}" download="graphe_binomiale.png" style="margin-top: 10px;">
+            <i class="fas fa-upload"></i>Télécharger 
         </a>
-        <h1>Binomial Distribution</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Afficher le graphique</button>
-        </form>
-        <div id="binomial-plot"></div>
-        <script>
-        var plotData = {{ plot_data|safe }};
-        Plotly.newPlot('binomial-plot', plotData);
-    </script>
-    </body>
+        <img src="data:image/png;base64,{{ plot_data }}" alt="Distribution Plot" style="width: 50%; height: 400px; border: 1px solid #ccc;">
+        <!-- Bouton de téléchargement -->
+        
+    </div>
+    {% endif %}
+</body>
 </html>

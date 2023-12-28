@@ -23,5 +23,7 @@ urlpatterns = [
    path('uniforme/', views.Uniforme, name='Uniforme'),
    path('exponentielle/', views.Exponentielle, name='Exponentielle'),
    path('calcules/', views.Calcules, name='Calcules'),
+   path('tests/', views.tests, name='tests'),
+   path('test_traitement/', views.test_traitement, name='test_traitement'),
    
 ]

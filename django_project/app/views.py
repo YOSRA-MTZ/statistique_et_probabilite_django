@@ -3,13 +3,12 @@ from django.conf import settings
 from django.shortcuts import render, redirect, HttpResponse
 import pandas as pd  # Note the corrected import statement
 import requests
-from .forms import BinomialForm
+from .forms import BinomialForm,FileUploadForm,ExponentielleForm,TraitementForm,UniformeForm,PoissonForm,NormaleForm
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import StringIO, BytesIO
 import base64
-from .forms import FileUploadForm,ExponentielleForm,TraitementForm,UniformeForm,PoissonForm,NormaleForm 
 import json
 import plotly.express as px
 import matplotlib
@@ -18,10 +17,13 @@ from scipy.stats import binom
 from django.http import JsonResponse
 import plotly.io as pio
 from .forms import BernoulliForm 
-from scipy.stats import bernoulli
+from scipy.stats import bernoulli,norm, t,expon, poisson,uniform
+from scipy import stats
+from unittest import result
 matplotlib.use('Agg')
 from statistics import mean, median, mode, variance, stdev
 import plotly.figure_factory as ff
+import io
 
 
 def index(request):
@@ -79,19 +81,27 @@ def generate_chart(df, type_chart, col1, col2):
         fig.update_layout(yaxis_title=col1, title='Violin Plot')
         return fig.to_json()
 
+
+  
+
     elif type_chart == 'kdeplot':
         data_to_plot = df[col1].replace([np.inf, -np.inf], np.nan).dropna()
 
-        group_labels = ['distplot']
-        fig = ff.create_distplot([data_to_plot], group_labels, curve_type='kde')
+        group_labels = ['distplot']  # This will be the label for the distribution
+        # Generate the KDE plot with the histogram
+        fig = ff.create_distplot([data_to_plot], group_labels, curve_type='kde', show_hist=True, histnorm='probability density')
 
-        # Mise à jour de la disposition (layout)
+        # Mise à jour de la disposition (layout) pour correspondre au style souhaité
         fig.update_layout(
             title="Kernel Density Estimation (KDE) Plot",
             yaxis_title="Density",
             xaxis_title=col1,
-            showlegend=False
+            showlegend=False,
+            template='plotly_white'
         )
+
+        # Update traces to match the desired style
+        fig.update_traces(marker=dict(color='grey', line=dict(color='black', width=1.5)))
 
         fig_json = fig.to_json()
 
@@ -206,7 +216,6 @@ def csv(request):
 
     return render(request, 'csv.html', {'form': form})
 
-
 def parcourir_chart(request):
     df = None
     columns_choices = None
@@ -285,124 +294,212 @@ def parcourir_chart(request):
     return render(request, 'parcourir.html', contexte)
 
 #//////////////////////////////// LOIS ////////////////////////////////////////////////////////////////
+
 def Binomiale(request):
+    plot_data = None  # Variable pour stocker les données du graphique encodées en base64
     if request.method == 'POST':
         form = BinomialForm(request.POST)
         if form.is_valid():
             n = form.cleaned_data['n']
             p = form.cleaned_data['p']
 
-            data_binomial = binom.rvs(n=n, p=p, loc=0, size=1000)
-            fig = px.histogram(x=data_binomial, nbins=n+1, title='Distribution Binomiale')
-            fig.update_layout(xaxis_title='Binomial', yaxis_title='Fréquence relative',bargap=0.2)
-            plot_data = fig.to_json()
+            # Générer des données de la distribution binomiale
+            data_binom = binom.rvs(n=n, p=p, loc=0, size=1000)
 
-            return render(request, 'binomiale.html', {'form': form, 'plot_data': plot_data})
+            # Créer l'histogramme avec Seaborn
+            sns.set(style="whitegrid")
+            plt.figure(figsize=(6, 4))
+            ax = sns.histplot(data_binom, kde=True, stat='probability')
+            ax.set(xlabel='Binomial', ylabel='Probabilité')
+
+            # Sauvegarder la figure dans un buffer temporaire
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+
+            # Encodage en base64 et décodage en UTF-8 pour la rendre utilisable dans le HTML
+            plot_data = base64.b64encode(image_png).decode('utf-8')
+
     else:
         form = BinomialForm()
 
-    return render(request, 'binomiale.html', {'form': form})
-
+    return render(request, 'binomiale.html', {'form': form, 'plot_data': plot_data})
 
 def Bernoulli(request):
+    plot_data = None  # Variable pour stocker les données du graphique encodées en base64
     if request.method == 'POST':
         form = BernoulliForm(request.POST)
         if form.is_valid():
             p = form.cleaned_data['p']
-            data_bernoulli = bernoulli.rvs(p, size=1000)
-            fig = px.histogram(x=data_bernoulli, nbins=2, title='Distribution de Bernoulli')
-            fig.update_layout(xaxis_title='Bernoulli', yaxis_title='Fréquence relative',bargap=0.2)
-            plot_data = fig.to_json()
 
-            return render(request, 'bernoulli.html', {'form': form, 'plot_data': plot_data})
+            # Générer des données de la distribution de Bernoulli
+            data_bern = bernoulli.rvs(size=1000, p=p)
+
+            # Créer l'histogramme avec Seaborn
+            sns.set(style="whitegrid")
+            plt.figure(figsize=(6, 4))
+            ax = sns.histplot(data_bern, kde=True, stat='probability')
+            ax.set(xlabel='Bernoulli', ylabel='Probabilité')
+
+            # Sauvegarder la figure dans un buffer temporaire
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+
+            # Encodage en base64 et décodage en UTF-8 pour la rendre utilisable dans le HTML
+            plot_data = base64.b64encode(image_png).decode('utf-8')
+
     else:
         form = BernoulliForm()
 
-    return render(request, 'bernoulli.html', {'form': form})
+    return render(request, 'bernoulli.html', {'form': form, 'plot_data': plot_data})
 
 def Normale(request):
+    plot_data = None  # Variable pour stocker les données du graphique encodées en base64
     if request.method == 'POST':
         form = NormaleForm(request.POST)
         if form.is_valid():
             mean = form.cleaned_data['mean']
             std_dev = form.cleaned_data['std_dev']
-            data_normale = np.random.normal(mean, std_dev, size=1000)
-            fig = px.histogram(x=data_normale, title='Distribution Normale Continue')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
 
-            # Convertir la figure en JSON
-            plot_data = fig.to_json()
+            # Points pour la courbe de la distribution normale
+            x_values = np.linspace(mean - 3*std_dev, mean + 3*std_dev, 1000)
+            y_values = norm.pdf(x_values, mean, std_dev)
 
-            return render(request, 'normale.html', {'form': form, 'plot_data': plot_data})
+            # Créer la courbe de la distribution normale remplie avec Matplotlib
+            sns.set(style="whitegrid")
+            plt.figure(figsize=(10, 6))
+            plt.fill_between(x_values, y_values, color="skyblue", alpha=0.4)
+            plt.plot(x_values, y_values, color="Slateblue", alpha=0.6)
+            plt.title('Distribution Normale Continue')
+            plt.xlabel('Valeur')
+            plt.ylabel('Densité de probabilité')
+
+            # Sauvegarder la figure dans un buffer temporaire
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+
+            # Encodage en base64 et décodage en UTF-8 pour la rendre utilisable dans le HTML
+            plot_data = base64.b64encode(image_png).decode('utf-8')
+
     else:
         form = NormaleForm()
 
-    return render(request, 'normale.html', {'form': form})
-
-
+    return render(request, 'normale.html', {'form': form, 'plot_data': plot_data})
 
 def Poisson(request):
+    plot_data = None  # Variable pour stocker les données du graphique encodées en base64
     if request.method == 'POST':
         form = PoissonForm(request.POST)
         if form.is_valid():
             lambda_param = form.cleaned_data['lambda_param']
-            data_poisson = np.random.poisson(lambda_param, size=1000)
-            fig = px.histogram(x=data_poisson, title='Distribution de Poisson')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
-            plot_data = fig.to_json()
 
-            return render(request, 'poisson.html', {'form': form, 'plot_data': plot_data})
+            # Générer des données de la distribution de Poisson
+            data_poisson = poisson.rvs(mu=lambda_param, size=1000)
+
+            # Créer l'histogramme avec Seaborn
+            sns.set(style="whitegrid")
+            plt.figure(figsize=(6, 4))
+            ax = sns.histplot(data_poisson, kde=True, stat='probability')
+            ax.set(xlabel='Poisson', ylabel='Probabilité')
+
+            # Sauvegarder la figure dans un buffer temporaire
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+
+            # Encodage en base64 et décodage en UTF-8 pour la rendre utilisable dans le HTML
+            plot_data = base64.b64encode(image_png).decode('utf-8')
+
     else:
         form = PoissonForm()
 
-    return render(request, 'poisson.html', {'form': form})
-
-
+    return render(request, 'poisson.html', {'form': form, 'plot_data': plot_data})
 
 def Uniforme(request):
+    plot_data = None  # Variable pour stocker les données du graphique encodées en base64
     if request.method == 'POST':
         form = UniformeForm(request.POST)
         if form.is_valid():
             a = form.cleaned_data['a']
             b = form.cleaned_data['b']
-            data_uniforme = np.random.uniform(a, b, size=1000)
-            fig = px.histogram(x=data_uniforme, title='Distribution Uniforme')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
 
-            # Convertir la figure en JSON
-            plot_data = fig.to_json()
+            # Générer des données de la distribution uniforme
+            data_unif = uniform.rvs(loc=a, scale=b-a, size=1000)  # b = loc + scale
 
-            return render(request, 'uniforme.html', {'form': form, 'plot_data': plot_data})
+            # Créer l'histogramme avec Seaborn
+            sns.set(style="whitegrid")
+            plt.figure(figsize=(6, 4))
+            ax = sns.histplot(data_unif, kde=True, stat='probability')
+            ax.set(xlabel='Uniforme', ylabel='Probabilité')
+
+            # Sauvegarder la figure dans un buffer temporaire
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+
+            # Encodage en base64 et décodage en UTF-8 pour la rendre utilisable dans le HTML
+            plot_data = base64.b64encode(image_png).decode('utf-8')
+
     else:
         form = UniformeForm()
 
-    return render(request, 'uniforme.html', {'form': form})
+    return render(request, 'uniforme.html', {'form': form, 'plot_data': plot_data})
 
 
+ # Assurez-vous d'importer votre formulaire ici
 
 def Exponentielle(request):
+    plot_data = None  # Variable pour stocker les données du graphique encodées en base64
     if request.method == 'POST':
         form = ExponentielleForm(request.POST)
         if form.is_valid():
             beta = form.cleaned_data['beta']
 
             # Générer des échantillons de la distribution exponentielle
-            data_exponentielle = np.random.exponential(scale=beta, size=1000)
+            data_exponentielle = expon.rvs(scale=beta, size=1000)
 
-            # Créer un histogramme interactif avec Plotly Express
-            fig = px.histogram(x=data_exponentielle, title='Distribution Exponentielle')
-            fig.update_layout(xaxis_title='Valeur', yaxis_title='Fréquence relative',bargap=0.2)
+            # Créer la courbe de densité avec Seaborn
+            sns.set(style="whitegrid")
+            plt.figure(figsize=(6, 4))
+            sns.kdeplot(data_exponentielle, fill=True)
+            plt.title('Distribution Exponentielle')
+            plt.xlabel('Valeur')
+            plt.ylabel('Densité de probabilité')
 
-            # Convertir la figure en JSON
-            plot_data = fig.to_json()
+            # Sauvegarder la figure dans un buffer temporaire
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
 
-            return render(request, 'exponentielle.html', {'form': form, 'plot_data': plot_data})
+            # Encodage en base64 et décodage en UTF-8 pour la rendre utilisable dans le HTML
+            plot_data = base64.b64encode(image_png).decode('utf-8')
+
     else:
         form = ExponentielleForm()
 
-    return render(request, 'exponentielle.html', {'form': form})
+    return render(request, 'exponentielle.html', {'form': form, 'plot_data': plot_data})
 
-
+#/////////////////////////////////////////////////////////calcules
 def mode(valeurs):
     uniques, counts = np.unique(valeurs, return_counts=True)
     max_count = np.max(counts)
@@ -435,3 +532,234 @@ def Calcules(request):
         form = TraitementForm()
 
     return render(request, 'calcules.html', {'form': form})
+#/////////////////////////////////////////////testes
+def calculate_z_test(field, sigma, n, significance):
+    # Convertir les valeurs en nombres
+    field = float(field)
+    sigma = float(sigma)
+    n = int(n)
+    significance = float(significance)
+
+    # Calculer le z-test
+    z_stat = norm.sf(abs((field - 0) / (sigma / np.sqrt(n)))) * 2  # Two-tailed test
+
+    # Interpréter les résultats du test
+    if z_stat < significance:
+        hypothesis_result = "Hypothesis rejected: The sample mean is significantly different from the population mean."
+    else:
+        hypothesis_result = "Hypothesis not rejected : There is no significant difference between the sample mean and the population mean."
+
+    return z_stat, hypothesis_result
+
+
+def calculate_z_test(field,zTestmi,sigma, n, significance):
+    # Convertir les valeurs en nombres
+    field = float(field)
+    sigma = float(sigma)
+    n = int(n)
+    significance = float(significance)
+    zTestmi = float(zTestmi.replace(',', '.'))
+    # Calculer le z-test
+    z_stat = (field - zTestmi) / (sigma / np.sqrt(n))
+
+    # Calculer les p-values pour les trois cas
+    p_value_two_sided = norm.sf(abs(z_stat)) * 2  # Bilatéral
+    p_value_left = norm.cdf(z_stat)  # Unilatéral à gauche
+    p_value_right = norm.sf(z_stat)  # Unilatéral à droite
+
+    # Interpréter les résultats du test
+    hypothesis_result_two_sided = "Hypothesis rejected: The sample mean is significantly different from the population mean." if p_value_two_sided < significance else "Hypothesis not rejected: There is no significant difference between the sample mean and the population mean."
+
+    hypothesis_result_left = "Hypothesis rejected: The sample mean is significantly less than the population mean." if p_value_left < significance else "Hypothesis not rejected: There is no significant difference, or the sample mean is greater than the population mean."
+
+    hypothesis_result_right = "Hypothesis rejected: The sample mean is significantly greater than the population mean." if p_value_right < significance else "Hypothesis not rejected: There is no significant difference, or the sample mean is less than the population mean."
+
+    # Retourner les résultats du test sous forme de dictionnaire
+    return {
+        'z_statistic': z_stat,
+        'p_value_two_sided': p_value_two_sided,
+        'p_value_left': p_value_left,
+        'p_value_right': p_value_right,
+        'hypothesis_result_two_sided': hypothesis_result_two_sided,
+        'hypothesis_result_left': hypothesis_result_left,
+        'hypothesis_result_right': hypothesis_result_right
+    }
+
+
+def calculate_linear_regression(x_values, y_values):
+    # Convert x_values and y_values to numpy arrays
+    x_values = np.array(x_values)
+    y_values = np.array(y_values)
+
+    # Use numpy's polyfit to perform linear regression and get the slope and intercept
+    slope, intercept = np.polyfit(x_values, y_values, 1)
+
+    # Retourner uniquement la pente et l'ordonnée à l'origine
+    return slope, intercept
+def calculate_t_test(field1, field2, s1, s2, n1, n2, significance):
+    # Convertir les valeurs en nombres
+    field1 = float(field1)
+    field2 = float(field2)
+    s1 = float(s1)
+    s2 = float(s2)
+    n1 = int(n1)
+    n2 = int(n2)
+
+    # Calculer la statistique t
+    t_stat, p_value = stats.ttest_ind_from_stats(mean1=field1, std1=s1, nobs1=n1, mean2=field2, std2=s2, nobs2=n2)
+
+    # Tester l'hypothèse nulle
+    if p_value < significance:
+        hypothesis_result = "Reject the null hypothesis"
+    else:
+        hypothesis_result = "Fail to reject the null hypothesis"
+
+    return t_stat, p_value, hypothesis_result
+def calculate_t_test2(field, tTestmi, sigma, n, significance):
+    # Convertir les valeurs en nombres
+    field = float(field)
+    sigma = float(sigma)
+    n = int(n)
+    significance = float(significance)
+    tTestmi = float(tTestmi)  
+
+    # Calculer le t-test
+    t_statistic = (field - tTestmi) / (sigma / np.sqrt(n))
+
+    # Calculer la p-value pour le test bilatéral
+    p_value_two_sided = t.sf(abs(t_statistic), df=n-1) * 2
+
+    # Interpréter les résultats du test
+    hypothesis_result_two_sided = "Hypothesis rejected: The sample mean is significantly different from the specified mean." if p_value_two_sided < significance else "Hypothesis not rejected: There is no significant difference between the sample mean and the specified mean."
+
+    # Retourner les résultats du test sous forme de dictionnaire
+    return {
+        't_statistic': t_statistic,
+        'p_value_two_sided': p_value_two_sided,
+        'hypothesis_result_two_sided': hypothesis_result_two_sided,
+    }
+
+def test_traitement(request):
+    if request.method == 'GET':
+        test_type = request.GET.get('testType')
+        if test_type:
+            # Récupérer les paramètres communs à tous les tests
+            significance = float(request.GET.get('significance', 0.05))
+
+            if test_type == 'tTest':
+                # Récupérer les paramètres spécifiques au t-test
+                field1 = request.GET.get('tTestField1')
+                field2 = request.GET.get('tTestField2')
+                s1 = request.GET.get('tTestS1')
+                s2 = request.GET.get('tTestS2')
+                n1 = request.GET.get('tTestN1')
+                n2 = request.GET.get('tTestN2')
+
+                t_stat, p_value, hypothesis_result = calculate_t_test(field1, field2, s1, s2, n1, n2, significance)
+
+                # Construire la réponse JSON avec chaque résultat dans des phrases distinctes
+                result_json = {
+                    't_statistic': t_stat,
+                    'p_value': p_value,
+                    'hypothesis_result': hypothesis_result,
+                    'formula': f"t = (X̄1 - X̄2) / sqrt(s1^2/n1 + s2^2/n2)"
+                }
+
+                return JsonResponse(result_json)
+                
+            elif test_type == 'zTest':
+                # Récupérer les paramètres spécifiques au z-test
+                field = request.GET.get('zTestField')
+                sigma = request.GET.get('zTestSigma')
+                n = request.GET.get('zTestN')
+                zTestmi =request.GET.get('zTestmi')
+                z_test_results = calculate_z_test(field,  zTestmi,sigma, n, significance)
+
+                # Extraire chaque résultat pour l'affichage
+                z_statistic_result = z_test_results['z_statistic']
+                p_value_two_sided_result = z_test_results['p_value_two_sided']
+                p_value_left_result = z_test_results['p_value_left']
+                p_value_right_result = z_test_results['p_value_right']
+                hypothesis_result_two_sided = z_test_results['hypothesis_result_two_sided']
+                hypothesis_result_left = z_test_results['hypothesis_result_left']
+                hypothesis_result_right = z_test_results['hypothesis_result_right']
+
+                # Construire la réponse JSON avec chaque résultat dans des phrases distinctes
+                result_json = {
+                    'z_statistic': z_statistic_result,
+                    'p_value_two_sided': p_value_two_sided_result,
+                    'p_value_left': p_value_left_result,
+                    'p_value_right': p_value_right_result,
+                    'hypothesis_result_two_sided': hypothesis_result_two_sided,
+                    'hypothesis_result_left': hypothesis_result_left,
+                    'hypothesis_result_right': hypothesis_result_right,
+                    'formula': f"Z = (X̄ - μ) / (σ/ √n)"
+                }
+
+                return JsonResponse(result_json)
+            
+            elif test_type == 'tTest2':
+                # Récupérer les paramètres spécifiques au t-test
+                field = request.GET.get('tTestField2')
+                sigma = request.GET.get('tTestSigma2')
+                n = request.GET.get('testTestN2')
+                tTestmi = request.GET.get('tTestmi2')
+                t_test_results = calculate_t_test2(field, tTestmi, sigma, n, significance)
+
+                # Extraire chaque résultat pour l'affichage
+                t_statistic_result = t_test_results['t_statistic']
+                p_value_two_sided_result = t_test_results['p_value_two_sided']
+                hypothesis_result_two_sided = t_test_results['hypothesis_result_two_sided']
+
+                # Construire la réponse JSON avec chaque résultat dans des phrases distinctes
+                result_json = {
+                    't_statistic': t_statistic_result,
+                    'p_value_two_sided': p_value_two_sided_result,
+                    'hypothesis_result_two_sided': hypothesis_result_two_sided,
+                    'formula': f"t = (X̄ - μ) / (σ/ √n)"
+                }
+
+                return JsonResponse(result_json)
+
+            elif test_type == 'linearRegression':
+                x_values_str = request.GET.get('linearRegressionX', '')
+                y_values_str = request.GET.get('linearRegressionY', '')
+
+                x_values = [float(value) for value in x_values_str.split()]
+                y_values = [float(value) for value in y_values_str.split()]
+
+                # Appeler la fonction calculate_linear_regression
+                slope, intercept = calculate_linear_regression(x_values, y_values)
+
+                # Créer un graphique de dispersion avec la ligne de régression
+                plt.scatter(x_values, y_values, label='Data points')
+                plt.plot(x_values, slope * np.array(x_values) + intercept, color='red', label='Regression line')
+                plt.xlabel('Variable indépendante (X)')
+                plt.ylabel('Variable dépendante (Y)')
+                plt.legend()
+
+                # Convertir le graphique en image
+                image_stream = io.BytesIO()
+                plt.savefig(image_stream, format='png')
+                image_stream.seek(0)
+
+                # Encoder l'image en base64 pour l'inclure dans la réponse JSON
+                image_data = base64.b64encode(image_stream.read()).decode('utf-8')
+
+                # Fermer le graphique
+                plt.close()
+
+                # Retourner l'image en réponse JSON, ainsi que la pente et l'ordonnée à l'origine
+                return JsonResponse({'image_path': image_data, 'slope': slope, 'intercept': intercept})
+
+            else:
+                return JsonResponse({'error': 'Invalid test type'})
+
+        else:
+            return JsonResponse({'error': 'Invalid test type'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+    return render(request, 'testes.html')
+
+def tests(request):
+    return render(request, 'testes.html')
