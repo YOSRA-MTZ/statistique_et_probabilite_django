@@ -10,165 +10,231 @@
             href="{% static 'css/testes.css' %}">
 
         {% endblock %}
-        
+
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     </head>
     <body>
 
-<div class="container">
-    <a href="{% url 'app' %}" class="back-button">
-        <i class="fas fa-arrow-left"></i> Retour
-    </a>
-  <div class="row">
-    <div class="col-4">
-        <div class="border ms-2">
-            <h4 class="text-center">Choose Test or Regression</h4>
+        <div class="container">
+            <a href="{% url 'app' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <div class="row">
+                <div class="col-4">
+                    <div class="border ms-2">
+                        <h4 class="text-center">Choose Test or Regression</h4>
 
-            <div class="ms-2">
-                <input type="radio" id="tTest" name="test_type" value="tTest">
-                <label for="tTest">Independent Samples T-testt</label>
+                        <div class="ms-2">
+                            <input type="radio" id="tTest" name="test_type"
+                                value="tTest">
+                            <label for="tTest">Independent Samples
+                                T-testt</label>
+                        </div>
+
+                        <div class="ms-2">
+                            <input type="radio" id="tTest" name="test_type"
+                                value="tTest2">
+                            <label for="tTest2">Paired Samples T-test</label>
+                        </div>
+
+                        <div class="ms-2">
+                            <input type="radio" id="zTest" name="test_type"
+                                value="zTest">
+                            <label for="zTest">Z-Test</label>
+                        </div>
+
+                        <div class="ms-2">
+                            <input type="radio" id="linearRegression"
+                                name="test_type" value="linearRegression">
+                            <label for="linearRegression">Linear
+                                Regression</label>
+                        </div>
+
+                        <button type="button" class="btn btn-primary ms-2 "
+                            onclick="validateChoice()">Validate</button>
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    <div class="border">
+                        <div id="parameterFields">
+                            <!-- Fields for t-Test 2-->
+                            <div id="tTestParams" style="display: none;">
+                                <label for="tTestField1">Sample Mean X:</label>
+                                <input type="text" id="tTestField1"
+                                    name="tTestField1"
+                                    placeholder="Enter sample mean for t-Test">
+                                <br>
+                                <label for="tTestField2">Sample Mean
+                                    (bar{X}_2):</label>
+                                <input type="text" id="tTestField2"
+                                    name="tTestField2"
+                                    placeholder="Enter sample mean for t-Test">
+                                <br>
+                                <label for="tTestS1">Sample Standard Deviation
+                                    (s_1):</label>
+                                <input type="text" id="tTestS1" name="tTestS1"
+                                    placeholder="Enter sample standard deviation for t-Test">
+                                <br>
+                                <label for="tTestS2">Sample Standard Deviation
+                                    (s_2):</label>
+                                <input type="text" id="tTestS2" name="tTestS2"
+                                    placeholder="Enter sample standard deviation for t-Test">
+                                <br>
+                                <label for="tTestN1">Sample Size (n_1):</label>
+                                <input type="text" id="tTestN1" name="tTestN1"
+                                    placeholder="Enter sample size for t-Test">
+                                <br>
+                                <label for="tTestN2">Sample Size (n_2):</label>
+                                <input type="text" id="tTestN2" name="tTestN2"
+                                    placeholder="Enter sample size for t-Test">
+                                <br>
+                                <label for="tTestSignificance">Significance
+                                    Level (alpha):</label>
+                                <input type="text" id="tTestSignificance"
+                                    name="tTestSignificance"
+                                    placeholder="Enter significance level">
+                                <br>
+                                <!-- Ajouter un bouton pour envoyer la formule t-Test -->
+                                <button type="button"
+                                    class="btn btn-primary ms-2"
+                                    onclick="sendTTestFormula()">Send t-Test
+                                    Formula</button>
+
+                                <!-- Ajouter la partie pour afficher les résultats du t-Test -->
+                                <div id="tTestResults" style="display: none;">
+                                    <h5>Independent Samples T-test Results:</h5>
+                                    <p id="tTestResultText"></p>
+                                </div>
+                            </div>
+
+                            <!-- Fields for Z-Test -->
+                            <div id="zTestParams" style="display: none;">
+                                <label for="zTestField">Sample Mean
+                                    (x̄):</label>
+                                <input type="text" id="zTestField"
+                                    name="zTestField"
+                                    placeholder="Enter sample mean for Z-Test">
+                                <br>
+                                <label for="zTestSigma">Population mean
+                                    (μ):</label>
+                                <input type="text" id="zTestmi" name="zTestmi"
+                                    placeholder="Enter population standard deviation for Z-Test">
+                                <br>
+                                <label for="zTestSigma">Population Standard
+                                    Deviation (σ):</label>
+                                <input type="text" id="zTestSigma"
+                                    name="zTestSigma"
+                                    placeholder="Enter population standard deviation for Z-Test">
+                                <br>
+                                <label for="zTestN">Sample Size(n):</label>
+                                <input type="text" id="zTestN" name="zTestN"
+                                    placeholder="Enter sample size for Z-Test">
+                                <br>
+                                <label for="zTestSignificance">Significance
+                                    Level (α):</label>
+                                <input type="text" id="zTestSignificance"
+                                    name="zTestSignificance"
+                                    placeholder="Enter significance level">
+                                <br>
+                                <!-- Ajouter un bouton pour envoyer la formule Z-Test -->
+                                <button type="button"
+                                    class="btn btn-primary ms-2"
+                                    onclick="sendZTestFormula()">Send Z-Test
+                                    Formula</button>
+
+                                <!-- Ajouter la partie pour afficher les résultats du Z-Test -->
+                                <div id="zTestResults" style="display: none;">
+                                    <h5>Z-Test Results:</h5>
+                                    <p id="zTestResultText"></p>
+                                </div>
+                            </div>
+
+                            <!-- Fields for t-Test 2-->
+                            <div id="tTestParams2" style="display: none;">
+                                <label for="tTestFieldtest2">Sample Mean
+                                    (x̄):</label>
+                                <input type="text" id="tTestFieldtest2"
+                                    name="tTestFieldtest2"
+                                    placeholder="Enter sample mean for T-Test">
+                                <br>
+                                <label for="tTestmi2">Population mean
+                                    (μ):</label>
+                                <input type="text" id="tTestmi2" name="tTestmi2"
+                                    placeholder="Enter population standard deviation for t-Test">
+                                <br>
+                                <label for="tTestSigma2">Population Standard
+                                    Deviation (σ):</label>
+                                <input type="text" id="tTestSigma2"
+                                    name="tTestSigma2"
+                                    placeholder="Enter population standard deviation for t-Test">
+                                <br>
+                                <label for="testTestN2">Sample Size(n):</label>
+                                <input type="text" id="testTestN2"
+                                    name="testTestN2"
+                                    placeholder="Enter sample size for t-Test">
+                                <br>
+                                <label for="tTestSignificance2">Significance
+                                    Level (α):</label>
+                                <input type="text" id="tTestSignificance2"
+                                    name="tTestSignificance2"
+                                    placeholder="Enter significance level">
+                                <br>
+                                <!-- Ajouter un bouton pour envoyer la formule Z-Test -->
+                                <button type="button"
+                                    class="btn btn-primary ms-2"
+                                    onclick="sendTTestFormula2()">Send T-Test
+                                    Formula</button>
+
+                                <!-- Ajouter la partie pour afficher les résultats du Z-Test -->
+                                <div id="tTestResults2" style="display: none;">
+                                    <h5>Paired Samples T-test Results:</h5>
+                                    <p id="tTestResultText2"></p>
+                                </div>
+                            </div>
+
+                            <!-- Fields for Linear Regression -->
+                            <div id="linearRegressionParams"
+                                style="display: none;">
+                                <label for="linearRegressionX">Independent
+                                    Variable (X):</label>
+                                <input type="text" id="linearRegressionX"
+                                    name="linearRegressionX"
+                                    placeholder="Enter data for Linear Regression X (separated by spaces)">
+                                <br>
+                                <label for="linearRegressionY">Dependent
+                                    Variable (Y):</label>
+                                <input type="text" id="linearRegressionY"
+                                    name="linearRegressionY"
+                                    placeholder="Enter data for Linear Regression Y (separated by spaces)">
+                                <br>
+                                <!-- Ajouter un bouton pour envoyer la formule Linear Regression -->
+                                <button type="button"
+                                    class="btn btn-primary ms-2"
+                                    onclick="sendLinearRegressionFormula()">Send
+                                    Linear Regression Formula</button>
+
+                                <!-- Ajouter la partie pour afficher les résultats de Linear Regression -->
+                                <div id="linearRegressionResults"
+                                    style="display: none;">
+                                    <h5>Linear Regression Results:</h5>
+                                    <p id="linearRegressionResultText"></p>
+                                    <img id="linearRegressionResultImage" src
+                                        alt="Linear Regression Result Image">
+                                </div>
+                            </div>
+
+                            <!-- ... (Ajouter des sections similaires pour d'autres tests) ... -->
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
-            <div class="ms-2">
-                <input type="radio" id="tTest" name="test_type" value="tTest2">
-                <label for="tTest2">Paired Samples T-test</label>
-            </div>
-
-            <div class="ms-2">
-                <input type="radio" id="zTest" name="test_type" value="zTest">
-                <label for="zTest">Z-Test</label>
-            </div>
-
-            <div class="ms-2">
-                <input type="radio" id="linearRegression" name="test_type" value="linearRegression">
-                <label for="linearRegression">Linear Regression</label>
-            </div>
-
-            <button type="button" class="btn btn-primary ms-2 " onclick="validateChoice()">Validate</button>
         </div>
-    </div>
 
-    <div class="col-8">
-        <div class="border">
-            <div id="parameterFields">
-                <!-- Fields for t-Test 2-->
-                <div id="tTestParams" style="display: none;">
-                    <label for="tTestField1">Sample Mean X:</label>
-                    <input type="text" id="tTestField1" name="tTestField1" placeholder="Enter sample mean for t-Test">
-                    <br>
-                    <label for="tTestField2">Sample Mean (bar{X}_2):</label>
-                    <input type="text" id="tTestField2" name="tTestField2" placeholder="Enter sample mean for t-Test">
-                    <br>
-                    <label for="tTestS1">Sample Standard Deviation (s_1):</label>
-                    <input type="text" id="tTestS1" name="tTestS1" placeholder="Enter sample standard deviation for t-Test">
-                    <br>
-                    <label for="tTestS2">Sample Standard Deviation (s_2):</label>
-                    <input type="text" id="tTestS2" name="tTestS2" placeholder="Enter sample standard deviation for t-Test">
-                    <br>
-                    <label for="tTestN1">Sample Size (n_1):</label>
-                    <input type="text" id="tTestN1" name="tTestN1" placeholder="Enter sample size for t-Test">
-                    <br>
-                    <label for="tTestN2">Sample Size (n_2):</label>
-                    <input type="text" id="tTestN2" name="tTestN2" placeholder="Enter sample size for t-Test">
-                    <br>
-                    <label for="tTestSignificance">Significance Level (alpha):</label>
-                    <input type="text" id="tTestSignificance" name="tTestSignificance" placeholder="Enter significance level">
-                    <br>
-                    <!-- Ajouter un bouton pour envoyer la formule t-Test -->
-                    <button type="button" class="btn btn-primary ms-2" onclick="sendTTestFormula()">Send t-Test Formula</button>
-
-                    <!-- Ajouter la partie pour afficher les résultats du t-Test -->
-                    <div id="tTestResults" style="display: none;">
-                        <h5>Independent Samples T-test Results:</h5>
-                        <p id="tTestResultText"></p>
-                    </div>
-                </div>
-
-                <!-- Fields for Z-Test -->
-                <div id="zTestParams" style="display: none;">
-                    <label for="zTestField">Sample Mean (x̄):</label>
-                    <input type="text" id="zTestField" name="zTestField" placeholder="Enter sample mean for Z-Test">
-                    <br>
-                    <label for="zTestSigma">Population mean (μ):</label>
-                    <input type="text" id="zTestmi" name="zTestmi" placeholder="Enter population standard deviation for Z-Test">
-                    <br>
-                    <label for="zTestSigma">Population Standard Deviation (σ):</label>
-                    <input type="text" id="zTestSigma" name="zTestSigma" placeholder="Enter population standard deviation for Z-Test">
-                    <br>
-                    <label for="zTestN">Sample Size(n):</label>
-                    <input type="text" id="zTestN" name="zTestN" placeholder="Enter sample size for Z-Test">
-                    <br>
-                    <label for="zTestSignificance">Significance Level (α):</label>
-                    <input type="text" id="zTestSignificance" name="zTestSignificance" placeholder="Enter significance level">
-                    <br>
-                    <!-- Ajouter un bouton pour envoyer la formule Z-Test -->
-                    <button type="button" class="btn btn-primary ms-2" onclick="sendZTestFormula()">Send Z-Test Formula</button>
-
-                    <!-- Ajouter la partie pour afficher les résultats du Z-Test -->
-                    <div id="zTestResults" style="display: none;">
-                        <h5>Z-Test Results:</h5>
-                        <p id="zTestResultText"></p>
-                    </div>
-                </div>
-
-<!-- Fields for t-Test 2-->
-<div id="tTestParams2" style="display: none;">
-    <label for="tTestFieldtest2">Sample Mean (x̄):</label>
-    <input type="text" id="tTestFieldtest2" name="tTestFieldtest2" placeholder="Enter sample mean for T-Test">
-    <br>
-    <label for="tTestmi2">Population mean (μ):</label>
-    <input type="text" id="tTestmi2" name="tTestmi2" placeholder="Enter population standard deviation for t-Test">
-    <br>
-    <label for="tTestSigma2">Population Standard Deviation (σ):</label>
-    <input type="text" id="tTestSigma2" name="tTestSigma2" placeholder="Enter population standard deviation for t-Test">
-    <br>
-    <label for="testTestN2">Sample Size(n):</label>
-    <input type="text" id="testTestN2" name="testTestN2" placeholder="Enter sample size for t-Test">
-    <br>
-    <label for="tTestSignificance2">Significance Level (α):</label>
-    <input type="text" id="tTestSignificance2" name="tTestSignificance2" placeholder="Enter significance level">
-    <br>
-    <!-- Ajouter un bouton pour envoyer la formule Z-Test -->
-    <button type="button" class="btn btn-primary ms-2" onclick="sendTTestFormula2()">Send T-Test Formula</button>
-
-    <!-- Ajouter la partie pour afficher les résultats du Z-Test -->
-    <div id="tTestResults2" style="display: none;">
-        <h5>Paired Samples T-test Results:</h5>
-        <p id="tTestResultText2"></p>
-    </div>
-</div>
-
-                <!-- Fields for Linear Regression -->
-                <div id="linearRegressionParams" style="display: none;">
-                    <label for="linearRegressionX">Independent Variable (X):</label>
-                    <input type="text" id="linearRegressionX" name="linearRegressionX" placeholder="Enter data for Linear Regression X (separated by spaces)">
-                    <br>
-                    <label for="linearRegressionY">Dependent Variable (Y):</label>
-                    <input type="text" id="linearRegressionY" name="linearRegressionY" placeholder="Enter data for Linear Regression Y (separated by spaces)">
-                    <br>
-                    <!-- Ajouter un bouton pour envoyer la formule Linear Regression -->
-                    <button type="button" class="btn btn-primary ms-2" onclick="sendLinearRegressionFormula()">Send Linear Regression Formula</button>
-                
-                    <!-- Ajouter la partie pour afficher les résultats de Linear Regression -->
-                    <div id="linearRegressionResults" style="display: none;">
-                        <h5>Linear Regression Results:</h5>
-                        <p id="linearRegressionResultText"></p>
-                        <img id="linearRegressionResultImage" src="" alt="Linear Regression Result Image">
-                    </div>
-                </div>
-
-                <!-- ... (Ajouter des sections similaires pour d'autres tests) ... -->
-            </div>
-
-        
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
+        <script>
     function validateChoice() {
         var selectedTest = document.querySelector('input[name="test_type"]:checked');
 
@@ -371,7 +437,10 @@
         var tTestN1 = getValue('tTestN1');
         var tTestN2 = getValue('tTestN2');
         var tTestSignificance = getValue('tTestSignificance');
-
+        if (isNaN(parseFloat(tTestField1)) || isNaN(parseFloat(tTestField2)) || isNaN(parseFloat(tTestS1)) || isNaN(parseInt(tTestS2)) || isNaN(parseFloat(tTestN1)) || isNaN(parseFloat(tTestN2)) || isNaN(parseFloat(tTestSignificance))) {
+            alert("Veuillez entrer des valeurs numériques valides pour les paramètres du T-test .");
+            return;
+        }
         var params = {
             testType: 'tTest',
             tTestField1: tTestField1,
@@ -418,7 +487,10 @@
     function sendLinearRegressionFormula() {
         var linearRegressionX = getValue('linearRegressionX');
         var linearRegressionY = getValue('linearRegressionY');
-
+        if (isNaN(parseFloat(linearRegressionX)) || isNaN(parseFloat(linearRegressionY))) {
+            alert("Veuillez entrer des valeurs numériques valides pour les paramètres du régression linéaire.");
+            return;
+        }
         var params = {
             testType: 'linearRegression',
             linearRegressionX: linearRegressionX,
@@ -434,13 +506,18 @@
         var tTestmi2  = getValue('tTestmi2');
         var  testTestN2 = getValue('testTestN2');
         var tTestSignificance2 = getValue('tTestSignificance2');
-// Validation de la taille de l'échantillon
+
     if (parseInt(tTestN2) >= 30) {
         alert("La taille de l'échantillon (n) doit être inférieur à 30 pour appliquer le test Z.");
         return;
     }
 
     // Validation supplémentaire pour les autres éléments
+    if (isNaN(parseFloat(tTestField2)) || isNaN(parseFloat(tTestSigma2)) || isNaN(parseFloat(tTestmi2)) || isNaN(parseInt(testTestN2)) || isNaN(parseFloat(tTestSignificance2))) {
+        alert("Veuillez entrer des valeurs numériques valides pour les paramètres du T-test .");
+        return;
+    }
+        
     
         var params = {
             testType: 'tTest2',
@@ -459,5 +536,5 @@
     }
 </script>
 
-</body>
+    </body>
 </html>
