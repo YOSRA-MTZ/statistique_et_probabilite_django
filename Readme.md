@@ -10,7 +10,8 @@ L'application propose les fonctionnalités suivantes :
 - Parcourir les données et effectuer des opérations de filtrage et de recherche
 - Générer des distributions de probabilité pour différentes lois (Binomiale, Bernoulli, Normale, Poisson, Uniforme, Exponentielle)
 - Calculer des statistiques de base (moyenne, médiane, mode, variance, écart-type)
--Calculer les testes (T-test,Z-test et régression linéaire)
+- Calculer les testes (T-test,Z-test et régression linéaire)
+
 
 ## Structure du code
 
@@ -29,7 +30,7 @@ Le code est organisé en plusieurs fichiers et répertoires :
 - `uniforme.html` : Page de génération de la distribution uniforme
 - `exponentielle.html` : Page de génération de la distribution exponentielle
 - `calcules.html` : Page de calcul des statistiques de base
--`testes.html` :Page de calcul des testes
+- `testes.html` :Page de calcul des testes
 - `forms.py` : Fichier contenant les formulaires utilisés dans l'application
 - `views.py` : Fichier contenant les vues de l'application
 - `static/` : Répertoire contenant les fichiers statiques (CSS, JavaScript, images)
