@@ -18,12 +18,46 @@
         </a>
        
         <h1>Calculs sur les valeurs</h1>
-        <form method="post">
+        <form method="post" onsubmit="return validateForm()">
             {% csrf_token %}
             <label for="valeurs">Liste de valeurs (séparées par des tirets ou des virgules) :</label>
             <input type="text" id="valeurs" name="valeurs" placeholder="Ex: 10, 20, 30, 40" {% if form.valeurs.value %}value="{{ form.valeurs.value }}"{% endif %}>
+           
             <input type="submit" value="Calculer">
         </form>
+        
+        <script>
+            function validateForm() {
+                var valeursInput = document.getElementById("valeurs");
+                
+               
+                var valeurs = valeursInput.value.split(/[,;-]+/);
+                
+                for (var i = 0; i < valeurs.length; i++) {
+                   
+                    var valeur = valeurs[i].trim();
+            
+                   
+                    if (valeur.includes(" ")) {
+                        alert("Erreur : Les nombres ne doivent pas contenir d'espaces.Il doivent être séparer par des tirets (-) ou des virgules (,)");
+
+                        return false; 
+                    }
+            
+                    
+                    if (isNaN(parseFloat(valeur))) {
+                        alert("Erreur : Le champ 'valeurs' doit contenir une liste de valeurs numériques séparées par des tirets (-) ou des virgules (,)");
+                        return false; 
+                    }
+                }
+                
+                // Si les validations sont réussies, le formulaire est soumis
+                return true;
+            }
+            </script>
+            
+            
+        
         
         {% if mean is not None %}
         <div class="results">

@@ -532,6 +532,7 @@ def Calcules(request):
         form = TraitementForm()
 
     return render(request, 'calcules.html', {'form': form})
+
 #/////////////////////////////////////////////testes
 def calculate_z_test(field, sigma, n, significance):
     # Convertir les valeurs en nombres
