@@ -20,39 +20,46 @@
         <h1>Calculs sur les valeurs</h1>
         <form method="post" onsubmit="return validateForm()">
             {% csrf_token %}
-            <label for="valeurs">Liste de valeurs (séparées par des tirets ou des virgules) :</label>
+            <label for="valeurs">Liste de valeurs (séparées par des virgules "," ou point virgules ";" ) :</label>
             <input type="text" id="valeurs" name="valeurs" placeholder="Ex: 10, 20, 30, 40" {% if form.valeurs.value %}value="{{ form.valeurs.value }}"{% endif %}>
            
             <input type="submit" value="Calculer">
         </form>
         
-        <script>
-            function validateForm() {
-                var valeursInput = document.getElementById("valeurs");
-                
-               
-                var valeurs = valeursInput.value.split(/[,;-]+/);
-                
-                for (var i = 0; i < valeurs.length; i++) {
-                   
-                    var valeur = valeurs[i].trim();
+       <script>
+        function validateForm() {
+            var valeursInput = document.getElementById("valeurs");
+            var valeurs = valeursInput.value.split(/[;,]+/);
             
-                   
-                    if (valeur.includes(" ")) {
-                        alert("Erreur : Les nombres ne doivent pas contenir d'espaces.Il doivent être séparer par des tirets (-) ou des virgules (,)");
-
-                        return false; 
-                    }
-            
-                    
-                    if (isNaN(parseFloat(valeur))) {
-                        alert("Erreur : Le champ 'valeurs' doit contenir une liste de valeurs numériques séparées par des tirets (-) ou des virgules (,)");
-                        return false; 
-                    }
+            for (var i = 0; i < valeurs.length; i++) {
+                var valeur = valeurs[i].trim();
+        
+                if (valeur.includes(" ")) {
+                    alert("Erreur : Les nombres ne doivent pas contenir d'espaces. Ils doivent être séparés par des tirets (-) ou des virgules (,)");
+                    return false;
                 }
-                return true;
+        
+                // Vérification pour s'assurer qu'il y a un seul tiret pour représenter une valeur négative
+                if (valeur.split('-').length > 2) {
+                    alert("Erreur : Les nombres ne doivent contenir qu'un seul tiret pour représenter une valeur négative.");
+                    return false;
+                }
+        
+                // Vérification si la valeur contient un tiret au mauvais endroit
+                if (valeur.indexOf('-') !== 0 && valeur.indexOf('-') !== -1) {
+                    alert("Erreur : Le tiret doit être au début d'un nombre pour représenter une valeur négative.");
+                    return false;
+                }
+        
+                if (isNaN(parseFloat(valeur))) {
+                    alert("Erreur : Le champ 'valeurs' doit contenir une liste de valeurs numériques séparées par des tirets (-) ou des virgules (,)");
+                    return false;
+                }
             }
-            </script>
+            return true;
+        }
+        
+            </script> 
             
             
         

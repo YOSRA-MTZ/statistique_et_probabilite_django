@@ -500,11 +500,15 @@ def Exponentielle(request):
     return render(request, 'exponentielle.html', {'form': form, 'plot_data': plot_data})
 
 #/////////////////////////////////////////////////////////calcules
+
+import numpy as np
+
 def mode(valeurs):
+    valeurs = np.array(valeurs.replace(';', ',').split(','), dtype=float)
     uniques, counts = np.unique(valeurs, return_counts=True)
     max_count = np.max(counts)
     modes = uniques[counts == max_count]
-    if max_count == 1:
+    if max_count == 1 or len(modes) == len(uniques):
         return "Il n'y a pas de mode"
     else:
         return modes.tolist()
@@ -516,12 +520,12 @@ def Calcules(request):
             valeurs_input = form.cleaned_data['valeurs']
             
             # Traiter les valeurs saisies
-            valeurs = [float(x.strip()) for x in valeurs_input.replace('-', ',').split(',') if x.strip()]
+            valeurs = [float(x.strip()) for x in valeurs_input.replace(';', ',').split(',') if x.strip()]
             
             # Calcul des statistiques
             mean_value = np.mean(valeurs)
             median_value = np.median(valeurs)
-            mode_value = mode(valeurs)
+            mode_value = mode(valeurs_input)
             variance_value = np.var(valeurs)
             stdev_value = np.std(valeurs)
 
@@ -532,6 +536,7 @@ def Calcules(request):
         form = TraitementForm()
 
     return render(request, 'calcules.html', {'form': form})
+
 
 #/////////////////////////////////////////////testes
 def calculate_z_test(field, sigma, n, significance):
