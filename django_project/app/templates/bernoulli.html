@@ -17,25 +17,24 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     </head>
     <body>
-        <a href="{% url 'app' %}" class="back-button">
-            <i class="fas fa-arrow-left"></i> Retour
-        </a>
-        <h1>Bernoulli Distribution</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Afficher le graphique</button>
-        </form>
-
-        {% if plot_data %}
-    <div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-        <a href="data:image/png;base64,{{ plot_data }}" download="graphe_bernoulli.png" style="margin-top: 10px;">
-            <i class="fas fa-upload"></i>Télécharger 
-        </a>
-        <img src="data:image/png;base64,{{ plot_data }}" alt="Distribution Plot" style="width: 50%; height: 400px; border: 1px solid #ccc;">
-        <!-- Bouton de téléchargement -->
-        
-    </div>
-    {% endif %}
+        <div class="container">
+            <a href="{% url 'app' %}" class="back-button " >
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <h1 style="text-align: center;">Bernoulli Distribution</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Afficher le graphique</button>
+            </form>
+            {% if plot_data %}
+            <div>
+                <a href="data:image/png;base64,{{ plot_data }}" download="graphe_binomiale.png" class="download-link">
+                    <i class="fas fa-download"></i>Télécharger
+                </a>
+                <img src="data:image/png;base64,{{ plot_data }}" alt="Distribution Plot">
+            </div>
+            {% endif %}
+        </div>
     </body>
 </html>
