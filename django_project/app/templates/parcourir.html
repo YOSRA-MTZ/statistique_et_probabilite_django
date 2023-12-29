@@ -15,9 +15,9 @@
 <body>
     <div class="card1">
         <a href="{% url 'app' %}" class="back-button">
-            <i class="fas fa-home"></i> Home
+            <i class="fas fa-home"></i> Accueil
         </a>
-        <h2>Formulaire </h2>
+        <h2>Parcours des données </h2>
         <form method="post" action="{% url 'parcourir_chart' %}" enctype="multipart/form-data" id="form_id">
             {% csrf_token %}
             {% if error_message %}
@@ -28,9 +28,9 @@
         {% endif %}
             <select id="parcourir_chart" name="parcourir_chart">
                 <option value="Nothing">-</option>
-                <option value="FindElem">FindElem</option>
+                <option value="FindElem">Recherche d'un élément</option>
                 <option value="Slicing">Slicing</option>
-                <option value="GroupBy">GroupBy</option>
+                <option value="GroupBy">Filtrer par</option>
             </select>
 
             <select id="col_name1" name="col_name1">
@@ -94,11 +94,8 @@
         
         <button type="submit">Envoyer</button>
     </form>
+    
 </div>
-
-   
-
-
 
     <div class="card">
         {% if df %}

@@ -1,97 +1,73 @@
+/* Style pour les conteneurs principaux */
 .centered-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 85vh; /* Réduit un peu la hauteur */
+   
 }
 
 .container {
-    width: 70%; /* Réduit davantage la largeur */
+    width: 75%; /* Réduit la largeur */
     margin: 0 auto;
 }
 
-.container h2 {
-    text-align: center;
-    color: #333;
-}
-
-.row {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-/* Styles pour les titres de sections */
-.container h4 {
-    color: #007bff;
-    margin-bottom: 15px;
-}
-
-/* Styles pour les boutons */
-.btn {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 15px;
-    border: none;
+/* Style pour les champs de formulaire */
+input[type="text"],
+button {
+    margin-bottom: 8px; /* Réduit la marge */
+    width: 95%; /* Réduit la largeur */
+    padding: 6px; /* Réduit le rembourrage */
     border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-/* Styles pour les champs de saisie */
-.input-field {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
+    font-size: 14px; /* Réduit la taille de police */
+}
+
+/* Style pour les sections des tests */
+#parameterFields > div {
+    margin-bottom: 15px; /* Réduit un peu la marge */
+}
+
+/* Style pour les boutons */
+.btn {
+    padding: 6px 16px; /* Réduit légèrement le rembourrage */
     border-radius: 4px;
-}
-
-/* Styles pour les labels */
-.label {
-    margin-bottom: 5px;
-    color: #555;
-}
-
-/* Styles pour les résultats des tests */
-.results {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.result-item {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #f2f2f2;
-    border-radius: 4px;
-}
-
-.result-title {
-    font-weight: bold;
-    color: #333;
-}
-
-.result-value {
-    color: #007bff;
-}
-
-/* Styles pour les radio buttons et leurs labels */
-.radio-button {
-    margin-right: 5px;
-}
-
-.radio-label {
-    margin-right: 20px;
-    color: #555;
+    border: none;
     cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Style pour les cartes */
+.card {
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Légèrement plus grand */
+    padding: 16px; /* Légèrement plus grand */
+    margin-bottom: 15px; /* Réduit un peu la marge */
+}
+
+/* Style pour les titres */
+h4 {
+    margin-bottom: 12px; /* Réduit un peu la marge */
+    font-size: 1.3rem; /* Légèrement plus petit */
+}
+
+/* Style pour les espacements */
+.ms-2 {
+    margin-left: 8px; /* Réduit un peu la marge */
+}
+
+/* Style pour les résultats */
+#tTestResults,
+#zTestResults,
+#tTestResults2,
+#linearRegressionResults {
+    margin-top: 15px; /* Réduit un peu la marge */
+}
+
+/* Style pour les icones */
+i {
+    margin-right: 4px; /* Réduit un peu la marge */
 }

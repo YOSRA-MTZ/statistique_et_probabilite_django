@@ -11,11 +11,16 @@
 
     {% endblock %}
 </head>
-
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <body>
     {% if chart %}
         <div class="card">
+            <button onclick="history.back()" class="back-button" >
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+           
             <div id="plotly-chart"></div>
         </div>
         <script>
