@@ -150,8 +150,19 @@ def visualiser_chart(request):
         df = pd.read_json(df_json_io)
        
         if pd.api.types.is_string_dtype(df[col1]) and type_chart in ['kdeplot', 'violinplot', 'boxplot']:
-            error_message = "La colonne choisie est de type 'string', veuillez choisir une autre colonne."
+            error_message = f"La colonne choisie est '{col1}'de type 'string', veuillez choisir une autre colonne."
             return render(request, 'diagramme.html', {'error_message': error_message})
+        elif pd.api.types.is_string_dtype(df[col2]) and type_chart in ['Barplot', 'lineplot']:
+            error_message = f"La deuxième colonne '{col2}' doit contenir des valeurs numériques. Veuillez choisir une autre colonne."
+            return render(request, 'diagramme.html', {'error_message': error_message})
+        elif type_chart == 'scatterplot':
+            # Vérifier si l'une des colonnes n'est pas numérique
+            if pd.api.types.is_string_dtype(df[col1]) or pd.api.types.is_string_dtype(df[col2]):
+                # Préparer un message d'erreur en indiquant les noms des colonnes non numériques
+                non_numeric_columns = [col for col in [col1, col2] if pd.api.types.is_string_dtype(df[col])]
+                error_message = f"Les colonnes '{', '.join(non_numeric_columns)}' doivent être numériques. Veuillez choisir d'autres colonnes."
+                return render(request, 'diagramme.html', {'error_message': error_message})
+
         elif type_chart=="Nothing":
             error_message = "Veuillez sélectionner un diagramme à afficher"
             return render(request, 'diagramme.html', {'error_message': error_message})
